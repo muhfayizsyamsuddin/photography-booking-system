@@ -1,0 +1,32 @@
+ctt.md
+dist/
+.env
+
+/src/generated/prisma
+
+# environment
+.env
+.env.local
+.env.*.local
+
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Prisma generated client
+src/generated/
+
+# Prisma / AI agent generated skills
+.agents/
+.claude/skills/
+.cursor/skills/
+.devin/
+.windsurf/skills/
+skills-lock.json
+
+# misc
+.DS_Store
+*.log
