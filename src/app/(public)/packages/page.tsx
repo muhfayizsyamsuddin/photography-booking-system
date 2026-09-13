@@ -1,10 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Packages",
+  title: "Services",
   description:
     "View available photography packages and session pricing.",
 };
@@ -25,78 +25,100 @@ export default async function PackagesPage() {
   });
 
   return (
-    <main className="min-h-screen bg-white px-6 py-16">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-10">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-gray-500">
-            Packages
-          </p>
+    <main className="bg-[#f6f3ee]">
+      <section className="mx-auto max-w-7xl px-6 pb-16 pt-20 lg:px-10 lg:pb-24 lg:pt-28">
+        <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
+          Services
+        </p>
 
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-gray-900">
-            Photography Packages
+        <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_0.7fr] lg:items-end">
+          <h1 className="max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#171717] md:text-6xl lg:text-7xl">
+            Thoughtful sessions,
+            <br />
+            simply arranged.
           </h1>
 
-          <p className="mt-4 max-w-2xl text-gray-600">
-            Choose a photography package that fits your session needs.
+          <p className="max-w-md text-[15px] leading-7 text-[#6d6963] lg:justify-self-end">
+            Choose a session that fits what you&apos;re planning. Every package
+            is designed to stay clear, flexible, and focused on the moments that
+            matter.
           </p>
         </div>
+      </section>
 
+      <section className="mx-auto max-w-7xl px-6 pb-28 lg:px-10 lg:pb-36">
         {packages.length === 0 ? (
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-10 text-center">
-            <p className="text-gray-500">
+          <div className="border-t border-[#d8d2ca] py-16">
+            <p className="text-sm text-[#6d6963]">
               No photography packages are currently available.
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {packages.map((item) => (
+          <div className="border-t border-[#d8d2ca]">
+            {packages.map((item, index) => (
               <article
                 key={item.id}
-                className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6"
+                className="grid gap-8 border-b border-[#d8d2ca] py-12 lg:grid-cols-[90px_1fr_0.7fr_auto]"
               >
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-gray-900">
+                <div>
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#8b7866]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                <div>
+                  <h2 className="font-serif text-3xl leading-tight text-[#171717] md:text-4xl">
                     {item.name}
                   </h2>
 
-                  <p className="mt-3 text-3xl font-semibold text-gray-900">
-                    Rp {item.price.toLocaleString("id-ID")}
-                  </p>
-
-                  {item.duration && (
-                    <p className="mt-2 text-sm text-gray-500">
-                      Duration: {item.duration}
-                    </p>
-                  )}
-
-                  <p className="mt-4 text-sm leading-6 text-gray-600">
+                  <p className="mt-4 max-w-xl text-sm leading-7 text-[#6d6963]">
                     {item.description}
                   </p>
+                </div>
 
-                  {item.includedServices && (
-                    <div className="mt-5">
-                      <p className="text-sm font-medium text-gray-900">
-                        Included
+                <div className="space-y-6">
+                  {item.duration && (
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-[#8b7866]">
+                        Duration
                       </p>
 
-                      <p className="mt-2 text-sm leading-6 text-gray-600">
+                      <p className="mt-2 text-sm text-[#171717]">
+                        {item.duration}
+                      </p>
+                    </div>
+                  )}
+
+                  {item.includedServices && (
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-[#8b7866]">
+                        Includes
+                      </p>
+
+                      <p className="mt-2 max-w-md text-sm leading-6 text-[#6d6963]">
                         {item.includedServices}
                       </p>
                     </div>
                   )}
                 </div>
 
-                <Link
-                  href={`/booking?package=${item.id}`}
-                  className="mt-6 inline-flex justify-center rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
-                >
-                  Book This Package
-                </Link>
+                <div className="flex items-end justify-between gap-6 lg:flex-col lg:items-end">
+                  <p className="font-serif text-2xl text-[#171717] md:text-3xl">
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </p>
+
+                  <Link
+                    href={`/booking?package=${item.id}`}
+                    className="border-b border-[#171717] pb-1 text-sm font-medium text-[#171717]"
+                  >
+                    Book session ↗
+                  </Link>
+                </div>
               </article>
             ))}
           </div>
         )}
-      </div>
+      </section>
     </main>
   );
 }

@@ -1,6 +1,7 @@
+import type { Metadata } from "next";
+
 import { prisma } from "@/lib/prisma";
 import BookingForm from "./booking-form";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Book a Session",
@@ -34,23 +35,35 @@ export default async function BookingPage({
   });
 
   return (
-    <main className="min-h-screen bg-gray-100 px-4 py-12">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Book a Photography Session
-        </h1>
+    <main className="bg-[#f6f3ee]">
+      <section className="mx-auto grid max-w-7xl gap-16 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-28">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
+            Book a Session
+          </p>
 
-        <p className="mt-2 text-gray-600">
-          Submit your booking request and we will contact you for confirmation.
-        </p>
+          <h1 className="mt-6 max-w-md font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#171717] md:text-6xl">
+            Let&apos;s create something worth remembering.
+          </h1>
 
-        <div className="mt-8 rounded-xl bg-white p-8 shadow-sm">
+          <p className="mt-6 max-w-md text-[15px] leading-7 text-[#6d6963]">
+            Tell me a little about your plans and I&apos;ll get back to you to
+            confirm availability and session details.
+          </p>
+
+          <div className="mt-10 border-t border-[#d8d2ca] pt-6 text-sm leading-6 text-[#6d6963]">
+            <p>Based in Makassar.</p>
+            <p>Available for graduation, weddings, couples, and family sessions.</p>
+          </div>
+        </div>
+
+        <div className="lg:border-l lg:border-[#d8d2ca] lg:pl-14">
           <BookingForm
             packages={packages}
             selectedPackageId={selectedPackageId}
           />
         </div>
-      </div>
+      </section>
     </main>
   );
 }

@@ -1,6 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import Image from "next/image";
 import type { Metadata } from "next";
+import Image from "next/image";
+
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -24,73 +25,104 @@ export default async function PortfolioPage() {
   });
 
   return (
-    <main className="min-h-screen bg-white px-6 py-16">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-10">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-gray-500">
-            Portfolio
-          </p>
+    <main className="bg-[#f6f3ee]">
+      <section className="mx-auto max-w-7xl px-6 pb-16 pt-20 lg:px-10 lg:pb-24 lg:pt-28">
+        <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
+          Portfolio
+        </p>
 
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-gray-900">
-            Selected Photography Work
+        <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_0.7fr] lg:items-end">
+          <h1 className="max-w-3xl font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#171717] md:text-6xl lg:text-7xl">
+            Selected stories,
+            <br />
+            quietly preserved.
           </h1>
 
-          <p className="mt-4 max-w-2xl text-gray-600">
-            A collection of selected photography sessions and client work.
+          <p className="max-w-md text-[15px] leading-7 text-[#6d6963] lg:justify-self-end">
+            A collection of graduation sessions, portraits, celebrations,
+            and moments documented with a simple and timeless approach.
           </p>
         </div>
+      </section>
 
+      <section className="mx-auto max-w-7xl px-6 pb-28 lg:px-10 lg:pb-36">
         {portfolios.length === 0 ? (
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-10 text-center">
-            <p className="text-gray-500">
+          <div className="border-t border-[#d8d2ca] py-16">
+            <p className="text-sm text-[#6d6963]">
               Portfolio is currently unavailable.
             </p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {portfolios.map((item) => (
-              <article
-                key={item.id}
-                className="group overflow-hidden rounded-2xl border border-gray-200 bg-white"
-              >
-                <div className="aspect-4/3 overflow-hidden bg-gray-100">
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                </div>
+          <div className="space-y-24 lg:space-y-32">
+            {portfolios.map((item, index) => {
+              const isEven = index % 2 === 0;
 
-                <div className="p-5">
-                  {item.photographyType && (
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
-                      {item.photographyType}
-                    </p>
-                  )}
+              return (
+                <article
+                  key={item.id}
+                  className={`grid gap-8 lg:grid-cols-12 ${
+                    isEven ? "" : "lg:[&>*:first-child]:order-2"
+                  }`}
+                >
+                  <div
+                    className={
+                      isEven
+                        ? "lg:col-span-8"
+                        : "lg:col-span-7 lg:col-start-6"
+                    }
+                  >
+                    <div className="relative aspect-4/3 overflow-hidden lg:aspect-5/4">
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 65vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
 
-                  <h2 className="mt-2 text-lg font-semibold text-gray-900">
-                    {item.title}
-                  </h2>
+                  <div
+                    className={`flex flex-col justify-end ${
+                      isEven
+                        ? "lg:col-span-4 lg:pl-6"
+                        : "lg:col-span-5 lg:pr-10"
+                    }`}
+                  >
+                    <div className="border-t border-[#d8d2ca] pt-5">
+                      <div className="flex items-center justify-between gap-6">
+                        <p className="text-xs uppercase tracking-[0.18em] text-[#8b7866]">
+                          {item.photographyType ?? "Photography"}
+                        </p>
 
-                  {item.location && (
-                    <p className="mt-1 text-sm text-gray-500">
-                      {item.location}
-                    </p>
-                  )}
+                        <span className="text-xs text-[#8b7866]">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                      </div>
 
-                  {item.description && (
-                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-gray-600">
-                      {item.description}
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
+                      <h2 className="mt-4 font-serif text-3xl leading-tight text-[#171717]">
+                        {item.title}
+                      </h2>
+
+                      {item.location && (
+                        <p className="mt-3 text-sm text-[#6d6963]">
+                          {item.location}
+                        </p>
+                      )}
+
+                      {item.description && (
+                        <p className="mt-5 max-w-md text-sm leading-7 text-[#6d6963]">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
-      </div>
+      </section>
     </main>
   );
 }

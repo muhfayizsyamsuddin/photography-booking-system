@@ -6,18 +6,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const navItems = [
-  {
-    href: "/portfolio",
-    label: "Portfolio",
-  },
-  {
-    href: "/packages",
-    label: "Packages",
-  },
-  {
-    href: "/contact",
-    label: "Contact",
-  },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/packages", label: "Services" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function PublicNavbar() {
@@ -25,17 +16,17 @@ export function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="relative border-b border-gray-200 bg-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <header className="relative z-50 border-b border-[#d8d2ca] bg-[#f6f3ee]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
         <Link
           href="/"
-          className="text-lg font-semibold text-gray-900"
           onClick={() => setIsOpen(false)}
+          className="text-sm font-semibold uppercase tracking-[0.22em] text-[#171717]"
         >
           Photography
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm md:flex">
+        <nav className="hidden items-center gap-8 text-sm md:flex">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
 
@@ -43,11 +34,11 @@ export function PublicNavbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={
+                className={`transition ${
                   isActive
-                    ? "font-medium text-gray-900"
-                    : "text-gray-600 hover:text-gray-900"
-                }
+                    ? "text-[#171717]"
+                    : "text-[#6d6963] hover:text-[#171717]"
+                }`}
               >
                 {item.label}
               </Link>
@@ -56,50 +47,42 @@ export function PublicNavbar() {
 
           <Link
             href="/booking"
-            className="rounded-lg bg-gray-900 px-4 py-2 font-medium text-white hover:bg-gray-800"
+            className="border-b border-[#171717] pb-1 text-sm font-medium text-[#171717]"
           >
-            Book Session
+            Book a Session ↗
           </Link>
         </nav>
 
         <button
           type="button"
-          onClick={() => setIsOpen((current) => !current)}
-          className="rounded-lg border border-gray-300 p-2 text-gray-700 md:hidden"
+          onClick={() => setIsOpen((value) => !value)}
+          className="md:hidden"
           aria-label="Toggle navigation"
         >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 border-t border-gray-200 bg-white px-6 py-4 shadow-lg md:hidden">
-          <nav className="flex flex-col gap-2">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
-
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                    isActive
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+        <div className="absolute left-0 right-0 top-full border-b border-[#d8d2ca] bg-[#f6f3ee] px-6 py-6 md:hidden">
+          <nav className="flex flex-col gap-5">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsOpen(false)}
+                className="text-lg text-[#171717]"
+              >
+                {item.label}
+              </Link>
+            ))}
 
             <Link
               href="/booking"
               onClick={() => setIsOpen(false)}
-              className="mt-2 rounded-lg bg-gray-900 px-4 py-2 text-center text-sm font-medium text-white"
+              className="mt-2 border-t border-[#d8d2ca] pt-5 text-lg"
             >
-              Book Session
+              Book a Session ↗
             </Link>
           </nav>
         </div>
