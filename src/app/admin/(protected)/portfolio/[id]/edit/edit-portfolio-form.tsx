@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { appToast } from "@/lib/toast";
+import { ImageUpload } from "@/components/ui/image-upload";
 
 type PortfolioData = {
   id: string;
@@ -12,6 +13,7 @@ type PortfolioData = {
   slug: string;
   description: string | null;
   imageUrl: string;
+  imagePublicId: string | null;
   location: string | null;
   photographyType: string | null;
   isPublished: boolean;
@@ -26,7 +28,10 @@ export default function EditPortfolioForm({
   portfolio,
 }: EditPortfolioFormProps) {
   const router = useRouter();
-
+  const [imageUrl, setImageUrl] = useState(portfolio.imageUrl);
+  const [imagePublicId, setImagePublicId] = useState(
+    portfolio.imagePublicId ?? ""
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -42,7 +47,8 @@ export default function EditPortfolioForm({
       title: formData.get("title"),
       slug: formData.get("slug"),
       description: formData.get("description"),
-      imageUrl: formData.get("imageUrl"),
+      imageUrl,
+      imagePublicId,
       location: formData.get("location"),
       photographyType: formData.get("photographyType"),
       displayOrder: Number(formData.get("displayOrder")),
@@ -156,19 +162,19 @@ export default function EditPortfolioForm({
           />
         </div>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium">
-            Image URL
-          </label>
+      <div>
+        <label className="mb-2 block text-sm font-medium">
+          Portfolio Image
+        </label>
 
-          <input
-            name="imageUrl"
-            type="url"
-            defaultValue={portfolio.imageUrl}
-            required
-            className="w-full rounded-lg border px-3 py-2"
-          />
-        </div>
+        <ImageUpload
+          value={imageUrl}
+          onChange={(image) => {
+            setImageUrl(image.imageUrl);
+            setImagePublicId(image.publicId);
+          }}
+        />
+      </div>
 
         <div>
           <label className="mb-1 block text-sm font-medium">

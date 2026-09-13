@@ -2,11 +2,13 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { ImageUpload } from "@/components/ui/image-upload";
 import { appToast } from "@/lib/toast";
 
 export default function PortfolioForm() {
   const router = useRouter();
+  const [imageUrl, setImageUrl] = useState("");
+  const [imagePublicId, setImagePublicId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -20,7 +22,8 @@ export default function PortfolioForm() {
       title: formData.get("title"),
       slug: formData.get("slug"),
       description: formData.get("description"),
-      imageUrl: formData.get("imageUrl"),
+      imageUrl,
+      imagePublicId,
       location: formData.get("location"),
       photographyType: formData.get("photographyType"),
       displayOrder: Number(formData.get("displayOrder")),
@@ -28,6 +31,11 @@ export default function PortfolioForm() {
     };
 
     try {
+      if (!imageUrl) {
+        appToast.error("Please upload a portfolio image.");
+        setIsLoading(false);
+        return;
+      }
       const response = await fetch("/api/admin/portfolio", {
         method: "POST",
         headers: {
@@ -95,15 +103,16 @@ export default function PortfolioForm() {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium">
-          Image URL
+        <label className="mb-2 block text-sm font-medium">
+          Portfolio Image
         </label>
 
-        <input
-          name="imageUrl"
-          type="url"
-          required
-          className="w-full rounded-lg border px-3 py-2"
+        <ImageUpload
+          value={imageUrl}
+          onChange={(image) => {
+            setImageUrl(image.imageUrl);
+            setImagePublicId(image.publicId);
+          }}
         />
       </div>
 

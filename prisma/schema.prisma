@@ -53,6 +53,7 @@ model Portfolio {
   slug            String  @unique
   description     String?
   imageUrl        String
+  imagePublicId   String?
   location        String?
   photographyType String?
   isPublished     Boolean @default(true)

@@ -4,12 +4,14 @@ import { z } from "zod";
 
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { cloudinary } from "@/lib/cloudinary";
 
 const portfolioSchema = z.object({
   title: z.string().min(2),
   slug: z.string().min(2),
   description: z.string().optional(),
   imageUrl: z.string().url(),
+  imagePublicId: z.string().min(1),
   location: z.string().optional(),
   photographyType: z.string().optional(),
   displayOrder: z.number().int(),
@@ -99,6 +101,15 @@ export async function PATCH(
       );
     }
 
+    if (
+      existingPortfolio.imagePublicId &&
+      existingPortfolio.imagePublicId !== result.data.imagePublicId
+    ) {
+      await cloudinary.uploader.destroy(
+        existingPortfolio.imagePublicId
+      );
+    }
+
     const updatedPortfolio = await prisma.portfolio.update({
       where: {
         id,
@@ -108,6 +119,7 @@ export async function PATCH(
         slug: result.data.slug,
         description: result.data.description || null,
         imageUrl: result.data.imageUrl,
+        imagePublicId: result.data.imagePublicId,
         location: result.data.location || null,
         photographyType: result.data.photographyType || null,
         displayOrder: result.data.displayOrder,
@@ -170,6 +182,12 @@ export async function DELETE(
         {
           status: 404,
         }
+      );
+    }
+
+    if (existingPortfolio.imagePublicId) {
+      await cloudinary.uploader.destroy(
+        existingPortfolio.imagePublicId
       );
     }
 
