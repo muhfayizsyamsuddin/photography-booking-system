@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { appToast } from "@/lib/toast";
+
 type BookingStatusFormProps = {
   bookingId: string;
   currentStatus: string;
@@ -23,12 +25,15 @@ export default function BookingStatusForm({
 
   const [status, setStatus] = useState(currentStatus);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setError("");
+    if (status === currentStatus) {
+      appToast.info("Status has not changed.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -45,42 +50,49 @@ export default function BookingStatusForm({
       const result = await response.json();
 
       if (!response.ok) {
-        setError(result.message ?? "Failed to update status.");
+        appToast.error(result.message ?? "Failed to update status.");
         return;
       }
 
+      appToast.success("Booking status updated.");
+
       router.refresh();
     } catch {
-      setError("Something went wrong.");
+      appToast.error("Something went wrong.");
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <select
-        value={status}
-        onChange={(event) => setStatus(event.target.value)}
-        className="w-full rounded-lg border border-gray-300 px-3 py-2"
-      >
-        {statuses.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div>
+        <label
+          htmlFor="status"
+          className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+        >
+          Status
+        </label>
 
-      {error && (
-        <p className="text-sm text-red-600">
-          {error}
-        </p>
-      )}
+        <select
+          id="status"
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+          disabled={isLoading}
+          className="mt-2 w-full border border-[#d8d2ca] bg-[#fcfaf7] px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {statuses.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <button
         type="submit"
-        disabled={isLoading}
-        className="w-full rounded-lg bg-gray-900 px-4 py-2 font-medium text-white disabled:opacity-50"
+        disabled={isLoading || status === currentStatus}
+        className="w-full bg-[#171717] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:bg-[#d8d2ca] disabled:text-[#8b7866]"
       >
         {isLoading ? "Updating..." : "Update Status"}
       </button>

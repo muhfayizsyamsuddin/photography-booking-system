@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -39,67 +40,120 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md rounded-xl bg-white p-8 shadow">
-        <h1 className="mb-2 text-2xl font-bold text-gray-900">
-          Admin Login
-        </h1>
-
-        <p className="mb-6 text-sm text-gray-500">
-          Sign in to manage photography bookings.
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <main className="min-h-screen bg-[#f6f3ee]">
+      <div className="grid min-h-screen lg:grid-cols-[0.9fr_1.1fr]">
+        <section className="flex flex-col border-b border-[#d8d2ca] px-6 py-8 lg:justify-between lg:border-b-0 lg:border-r lg:px-12 lg:py-12">
           <div>
-            <label
-              htmlFor="email"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-gray-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="mb-1 block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-gray-500"
-            />
-          </div>
-
-          {error && (
-            <p className="text-sm text-red-600">
-              {error}
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#8b7866]">
+              Photography
             </p>
-          )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-lg bg-gray-900 px-4 py-2 font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+            <p className="mt-1 text-xl font-semibold tracking-tight text-[#171717]">
+              Admin
+            </p>
+          </div>
+
+          <div className="mt-14 max-w-md lg:mt-0">
+            <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#8b7866]">
+              Management
+            </p>
+
+            <h1 className="mt-5 text-4xl font-semibold tracking-tight text-[#171717] sm:text-5xl">
+              Welcome back.
+            </h1>
+
+            <p className="mt-5 max-w-sm text-sm leading-7 text-[#6d6963]">
+              Sign in to manage bookings, photography packages, and portfolio
+              content.
+            </p>
+          </div>
+
+          <Link
+            href="/"
+            className="mt-10 self-start border-b border-[#171717] pb-1 text-sm font-medium text-[#171717] transition-opacity hover:opacity-60 lg:mt-0"
           >
-            {isLoading ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
+            ← Back to website
+          </Link>
+        </section>
+
+        <section className="flex items-center justify-center px-6 py-12 lg:px-12">
+          <div className="w-full max-w-md">
+            <div className="border border-[#d8d2ca] bg-[#fcfaf7]">
+              <div className="border-b border-[#d8d2ca] px-5 py-5 sm:px-6">
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#8b7866]">
+                  Admin Access
+                </p>
+
+                <h2 className="mt-2 text-xl font-semibold text-[#171717]">
+                  Sign in
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-[#6d6963]">
+                  Enter your administrator credentials to continue.
+                </p>
+              </div>
+
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6 px-5 py-6 sm:px-6"
+              >
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+                  >
+                    Email
+                  </label>
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    disabled={isLoading}
+                    className="mt-2 w-full border border-[#d8d2ca] bg-[#fcfaf7] px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors placeholder:text-[#a39b92] focus:border-[#8b7866] disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+                  >
+                    Password
+                  </label>
+
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    disabled={isLoading}
+                    className="mt-2 w-full border border-[#d8d2ca] bg-[#fcfaf7] px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors placeholder:text-[#a39b92] focus:border-[#8b7866] disabled:cursor-not-allowed disabled:opacity-60"
+                  />
+                </div>
+
+                {error && (
+                  <div className="border border-red-200 bg-red-50 px-3 py-2.5">
+                    <p className="text-sm text-red-700">
+                      {error}
+                    </p>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-[#171717] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isLoading ? "Signing in..." : "Sign in"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );

@@ -15,116 +15,190 @@ export default async function AdminPortfolioPage() {
   });
 
   return (
-    <div>
-      <div className="mb-6 flex items-center justify-between">
+    <div className="space-y-10">
+      <header className="flex flex-col gap-5 border-b border-[#d8d2ca] pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#8b7866]">
+            Portfolio Management
+          </p>
+
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#171717]">
             Portfolio
           </h1>
 
-          <p className="mt-2 text-gray-600">
-            Manage photography portfolio content.
+          <p className="mt-2 max-w-xl text-sm leading-6 text-[#6d6963]">
+            Manage published photography work, categories, locations, and
+            display order.
           </p>
         </div>
 
         <Link
           href="/admin/portfolio/new"
-          className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+          className="self-start bg-[#171717] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 sm:self-auto"
         >
           Add Portfolio
         </Link>
-      </div>
+      </header>
 
       {portfolios.length === 0 ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-8">
-          <p className="text-sm text-gray-500">
+        <div className="border border-[#d8d2ca] bg-[#fcfaf7] px-6 py-14">
+          <p className="text-sm text-[#6d6963]">
             No portfolio items found.
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-          <table className="w-full">
-            <thead className="border-b border-gray-200 bg-gray-50">
-              <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
-                  Title
-                </th>
+        <section className="border border-[#d8d2ca] bg-[#fcfaf7]">
+          <div className="hidden overflow-x-auto md:block">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b border-[#d8d2ca]">
+                  <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Title
+                  </th>
 
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
-                  Type
-                </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Type
+                  </th>
 
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
-                  Location
-                </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Location
+                  </th>
 
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
-                  Status
-                </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Status
+                  </th>
 
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
-                  Order
-                </th>
+                  <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Order
+                  </th>
 
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">
-                  Action
-                </th>
-              </tr>
-            </thead>
+                  <th className="px-6 py-4 text-right text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Action
+                  </th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {portfolios.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-b border-gray-100 last:border-b-0"
-                >
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-gray-900">
+              <tbody>
+                {portfolios.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="border-b border-[#e7e1da] last:border-b-0"
+                  >
+                    <td className="px-6 py-5">
+                      <p className="text-sm font-medium text-[#171717]">
+                        {item.title}
+                      </p>
+
+                      <p className="mt-1 text-xs text-[#6d6963]">
+                        {item.slug}
+                      </p>
+                    </td>
+
+                    <td className="px-6 py-5 text-sm text-[#6d6963]">
+                      {item.photographyType || "—"}
+                    </td>
+
+                    <td className="px-6 py-5 text-sm text-[#6d6963]">
+                      {item.location || "—"}
+                    </td>
+
+                    <td className="px-6 py-5">
+                      {item.isPublished ? (
+                        <span className="inline-flex border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
+                          PUBLISHED
+                        </span>
+                      ) : (
+                        <span className="inline-flex border border-[#d8d2ca] bg-[#f6f3ee] px-2.5 py-1 text-[11px] font-medium text-[#6d6963]">
+                          DRAFT
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="px-6 py-5 text-sm text-[#6d6963]">
+                      {item.displayOrder}
+                    </td>
+
+                    <td className="px-6 py-5 text-right">
+                      <Link
+                        href={`/admin/portfolio/${item.id}/edit`}
+                        className="text-sm font-medium text-[#171717] transition-opacity hover:opacity-60"
+                      >
+                        Edit ↗
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="divide-y divide-[#d8d2ca] md:hidden">
+            {portfolios.map((item) => (
+              <article key={item.id} className="p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="font-medium text-[#171717]">
                       {item.title}
                     </p>
 
-                    <p className="text-sm text-gray-500">
+                    <p className="mt-1 text-xs text-[#6d6963]">
                       {item.slug}
                     </p>
-                  </td>
+                  </div>
 
-                  <td className="px-4 py-3 text-sm text-gray-700">
-                    {item.photographyType || "-"}
-                  </td>
+                  {item.isPublished ? (
+                    <span className="inline-flex border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[10px] font-medium text-emerald-700">
+                      PUBLISHED
+                    </span>
+                  ) : (
+                    <span className="inline-flex border border-[#d8d2ca] bg-[#f6f3ee] px-2.5 py-1 text-[10px] font-medium text-[#6d6963]">
+                      DRAFT
+                    </span>
+                  )}
+                </div>
 
-                  <td className="px-4 py-3 text-sm text-gray-700">
-                    {item.location || "-"}
-                  </td>
+                <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-[#e7e1da] pt-4">
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-[0.14em] text-[#8b7866]">
+                      Type
+                    </dt>
 
-                  <td className="px-4 py-3">
-                    {item.isPublished ? (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                        Published
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
-                        Draft
-                      </span>
-                    )}
-                  </td>
+                    <dd className="mt-1 text-sm text-[#6d6963]">
+                      {item.photographyType || "—"}
+                    </dd>
+                  </div>
 
-                  <td className="px-4 py-3 text-sm text-gray-700">
-                    {item.displayOrder}
-                  </td>
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-[0.14em] text-[#8b7866]">
+                      Order
+                    </dt>
 
-                  <td className="px-4 py-3">
-                    <Link
-                      href={`/admin/portfolio/${item.id}/edit`}
-                      className="text-sm font-medium text-gray-900 hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    <dd className="mt-1 text-sm text-[#171717]">
+                      {item.displayOrder}
+                    </dd>
+                  </div>
+
+                  <div className="col-span-2">
+                    <dt className="text-[10px] uppercase tracking-[0.14em] text-[#8b7866]">
+                      Location
+                    </dt>
+
+                    <dd className="mt-1 text-sm text-[#6d6963]">
+                      {item.location || "—"}
+                    </dd>
+                  </div>
+                </dl>
+
+                <Link
+                  href={`/admin/portfolio/${item.id}/edit`}
+                  className="mt-5 inline-block border-b border-[#171717] pb-1 text-sm font-medium text-[#171717]"
+                >
+                  Edit portfolio ↗
+                </Link>
+              </article>
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

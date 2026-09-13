@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -41,15 +41,23 @@ export function AdminSidebar({
   function renderNavigation() {
     return (
       <>
-        <Link
-          href="/admin/dashboard"
-          onClick={() => setIsOpen(false)}
-          className="text-xl font-bold text-gray-900"
-        >
-          Photography Admin
-        </Link>
+        <div>
+          <Link
+            href="/admin/dashboard"
+            onClick={() => setIsOpen(false)}
+            className="block"
+          >
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#8b7866]">
+              Photography
+            </p>
 
-        <nav className="mt-8 space-y-2">
+            <p className="mt-1 text-lg font-semibold tracking-tight text-[#171717]">
+              Admin
+            </p>
+          </Link>
+        </div>
+
+        <nav className="mt-10 space-y-1">
           {navItems.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -60,10 +68,10 @@ export function AdminSidebar({
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`block rounded-lg px-3 py-2 text-sm font-medium transition ${
+                className={`block border-l-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    ? "border-[#171717] bg-[#f6f3ee] text-[#171717]"
+                    : "border-transparent text-[#6d6963] hover:border-[#d8d2ca] hover:bg-[#faf8f5] hover:text-[#171717]"
                 }`}
               >
                 {item.label}
@@ -72,12 +80,16 @@ export function AdminSidebar({
           })}
         </nav>
 
-        <div className="mt-auto border-t border-gray-200 pt-5">
-          <p className="text-sm font-medium text-gray-900">
-            {user.name}
+        <div className="mt-auto border-t border-[#d8d2ca] pt-5">
+          <p className="text-xs uppercase tracking-[0.14em] text-[#8b7866]">
+            Signed in as
           </p>
 
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-2 text-sm font-medium text-[#171717]">
+            {user.name || "Admin"}
+          </p>
+
+          <p className="mt-1 break-all text-xs leading-5 text-[#6d6963]">
             {user.email}
           </p>
 
@@ -88,8 +100,9 @@ export function AdminSidebar({
                 callbackUrl: "/admin/login",
               })
             }
-            className="mt-4 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            className="mt-5 flex w-full items-center justify-center gap-2 border border-[#d8d2ca] px-3 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee]"
           >
+            <LogOut size={15} />
             Sign out
           </button>
         </div>
@@ -99,10 +112,10 @@ export function AdminSidebar({
 
   return (
     <>
-      <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 lg:hidden">
+      <div className="flex items-center justify-between border-b border-[#d8d2ca] bg-[#fcfaf7] px-4 py-3.5 lg:hidden">
         <Link
           href="/admin/dashboard"
-          className="font-semibold text-gray-900"
+          className="text-sm font-semibold tracking-tight text-[#171717]"
         >
           Photography Admin
         </Link>
@@ -110,14 +123,14 @@ export function AdminSidebar({
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="rounded-lg border border-gray-300 p-2 text-gray-700"
+          className="border border-[#d8d2ca] p-2 text-[#171717] transition-colors hover:bg-[#f6f3ee]"
           aria-label="Open admin navigation"
         >
           <Menu size={20} />
         </button>
       </div>
 
-      <aside className="hidden w-64 flex-col border-r border-gray-200 bg-white p-6 lg:flex">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-[#d8d2ca] bg-[#fcfaf7] p-6 lg:flex">
         {renderNavigation()}
       </aside>
 
@@ -126,16 +139,16 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={() => setIsOpen(false)}
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/35"
             aria-label="Close admin navigation"
           />
 
-          <aside className="relative z-10 flex h-full w-72 flex-col bg-white p-6 shadow-xl">
+          <aside className="relative z-10 flex h-full w-72 flex-col border-r border-[#d8d2ca] bg-[#fcfaf7] p-6 shadow-xl">
             <div className="mb-6 flex justify-end">
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg border border-gray-300 p-2 text-gray-700"
+                className="border border-[#d8d2ca] p-2 text-[#171717] transition-colors hover:bg-[#f6f3ee]"
                 aria-label="Close admin navigation"
               >
                 <X size={20} />
