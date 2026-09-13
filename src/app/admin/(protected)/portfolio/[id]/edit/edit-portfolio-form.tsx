@@ -70,6 +70,7 @@ export default function EditPortfolioForm({
       const result = await response.json();
 
       if (!response.ok) {
+        await cleanupUploadedImage(imagePublicId);
         appToast.error(
           result.message ?? "Failed to update portfolio item."
         );
@@ -81,6 +82,7 @@ export default function EditPortfolioForm({
       router.push("/admin/portfolio");
       router.refresh();
     } catch {
+      await cleanupUploadedImage(imagePublicId);
       appToast.error("Something went wrong.");
     } finally {
       setIsLoading(false);
@@ -117,6 +119,28 @@ export default function EditPortfolioForm({
       appToast.error("Something went wrong.");
     } finally {
       setIsDeleting(false);
+    }
+  }
+
+  const originalPublicId = portfolio.imagePublicId ?? "";
+
+  async function cleanupUploadedImage(publicId: string) {
+    if (!publicId || publicId === originalPublicId) {
+      return;
+    }
+
+    try {
+      await fetch("/api/admin/upload/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          publicId,
+        }),
+      });
+    } catch {
+      // cleanup failure shouldn't block the main UX
     }
   }
 
@@ -169,7 +193,22 @@ export default function EditPortfolioForm({
 
         <ImageUpload
           value={imageUrl}
-          onChange={(image) => {
+          onChange={async (image) => {
+            if (
+              imagePublicId &&
+              imagePublicId !== originalPublicId
+            ) {
+              await fetch("/api/admin/upload/delete", {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  publicId: imagePublicId,
+                }),
+              });
+            }
+
             setImageUrl(image.imageUrl);
             setImagePublicId(image.publicId);
           }}

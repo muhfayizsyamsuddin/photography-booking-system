@@ -1,7 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import BookingForm from "./booking-form";
 
-export default async function BookingPage() {
+type BookingPageProps = {
+  searchParams: Promise<{
+    package?: string;
+  }>;
+};
+
+export default async function BookingPage({
+  searchParams,
+}: BookingPageProps) {
+  const { package: selectedPackageId } = await searchParams;
+
   const packages = await prisma.package.findMany({
     where: {
       isActive: true,
@@ -28,7 +38,10 @@ export default async function BookingPage() {
         </p>
 
         <div className="mt-8 rounded-xl bg-white p-8 shadow-sm">
-          <BookingForm packages={packages} />
+          <BookingForm
+            packages={packages}
+            selectedPackageId={selectedPackageId}
+          />
         </div>
       </div>
     </main>
