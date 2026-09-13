@@ -80,31 +80,41 @@ export function AdminSidebar({
           })}
         </nav>
 
-        <div className="mt-auto border-t border-[#d8d2ca] pt-5">
-          <p className="text-xs uppercase tracking-[0.14em] text-[#8b7866]">
-            Signed in as
-          </p>
-
-          <p className="mt-2 text-sm font-medium text-[#171717]">
-            {user.name || "Admin"}
-          </p>
-
-          <p className="mt-1 break-all text-xs leading-5 text-[#6d6963]">
-            {user.email}
-          </p>
-
-          <button
-            type="button"
-            onClick={() =>
-              signOut({
-                callbackUrl: "/admin/login",
-              })
-            }
-            className="mt-5 flex w-full items-center justify-center gap-2 border border-[#d8d2ca] px-3 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee]"
+        <div className="mt-auto">
+          <Link
+            href="/"
+            target="_blank"
+            className="inline-block border-b border-[#171717] pb-1 text-sm font-medium text-[#171717] transition-opacity hover:opacity-60"
           >
-            <LogOut size={15} />
-            Sign out
-          </button>
+            View website ↗
+          </Link>
+
+          <div className="mt-5 border-t border-[#d8d2ca] pt-5">
+            <p className="text-xs uppercase tracking-[0.14em] text-[#8b7866]">
+              Signed in as
+            </p>
+
+            <p className="mt-2 text-sm font-medium text-[#171717]">
+              {user.name || "Admin"}
+            </p>
+
+            <p className="mt-1 break-all text-xs leading-5 text-[#6d6963]">
+              {user.email}
+            </p>
+
+            <button
+              type="button"
+              onClick={() =>
+                signOut({
+                  callbackUrl: "/admin/login",
+                })
+              }
+              className="mt-5 flex w-full items-center justify-center gap-2 border border-[#d8d2ca] px-3 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee]"
+            >
+              <LogOut size={15} />
+              Sign out
+            </button>
+          </div>
         </div>
       </>
     );
@@ -112,7 +122,7 @@ export function AdminSidebar({
 
   return (
     <>
-      <div className="flex items-center justify-between border-b border-[#d8d2ca] bg-[#fcfaf7] px-4 py-3.5 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-[#d8d2ca] bg-[#fcfaf7] px-4 py-3.5 lg:hidden">
         <Link
           href="/admin/dashboard"
           className="text-sm font-semibold tracking-tight text-[#171717]"
@@ -130,7 +140,7 @@ export function AdminSidebar({
         </button>
       </div>
 
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-[#d8d2ca] bg-[#fcfaf7] p-6 lg:flex">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-[#d8d2ca] bg-[#fcfaf7] p-6 lg:flex">
         {renderNavigation()}
       </aside>
 

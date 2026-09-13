@@ -16,7 +16,7 @@ export function PublicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="relative z-50 border-b border-[#d8d2ca] bg-[#f6f3ee]">
+    <header className="sticky top-0 z-40 border-b border-[#d8d2ca] bg-[#f6f3ee]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
         <Link
           href="/"

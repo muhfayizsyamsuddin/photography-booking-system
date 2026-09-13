@@ -244,7 +244,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-[#d8d2ca] bg-[#f6f3ee]">
+      <section className="border-t border-[#d8d2ca] bg-[#fcfaf7]">
         <div className="mx-auto max-w-7xl px-6 py-24 text-center lg:px-10 lg:py-32">
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
             Let&apos;s Create
