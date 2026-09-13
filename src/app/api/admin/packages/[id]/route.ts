@@ -139,3 +139,94 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _request: Request,
+  context: RouteContext
+) {
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Unauthorized",
+      },
+      {
+        status: 401,
+      }
+    );
+  }
+
+  const { id } = await context.params;
+
+  try {
+    const packageData = await prisma.package.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        _count: {
+          select: {
+            bookings: true,
+          },
+        },
+      },
+    });
+
+    if (!packageData) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Package not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    if (packageData._count.bookings > 0) {
+      const disabledPackage = await prisma.package.update({
+        where: {
+          id,
+        },
+        data: {
+          isActive: false,
+        },
+      });
+
+      return NextResponse.json({
+        success: true,
+        action: "disabled",
+        message:
+          "Package has booking history, so it was deactivated instead of deleted.",
+        data: disabledPackage,
+      });
+    }
+
+    await prisma.package.delete({
+      where: {
+        id,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      action: "deleted",
+      message: "Package deleted successfully.",
+    });
+  } catch (error) {
+    console.error("DELETE_PACKAGE_ERROR", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to delete package",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
