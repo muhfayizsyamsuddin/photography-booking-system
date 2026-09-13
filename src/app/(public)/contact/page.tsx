@@ -1,3 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Contact us directly for photography package, schedule, and session inquiries.",
+};
+
 const whatsappNumber =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
 

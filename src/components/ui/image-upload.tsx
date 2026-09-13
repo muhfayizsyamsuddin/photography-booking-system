@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
-
+import Image from "next/image";
 import { appToast } from "@/lib/toast";
 
 type UploadedImage = {
@@ -65,11 +65,13 @@ export function ImageUpload({
   return (
     <div className="space-y-3">
       {value && (
-        <div className="overflow-hidden rounded-xl border border-gray-200">
-          <img
+        <div className="relative h-56 overflow-hidden rounded-xl border border-gray-200">
+          <Image
             src={value}
             alt="Portfolio preview"
-            className="h-56 w-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 640px"
+            className="object-cover"
           />
         </div>
       )}

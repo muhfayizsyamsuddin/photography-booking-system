@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 
 export default async function HomePage() {
@@ -144,10 +144,12 @@ export default async function HomePage() {
                   className="overflow-hidden rounded-2xl border border-gray-200 bg-white"
                 >
                   <div className="aspect-4/3 overflow-hidden bg-gray-100">
-                    <img
+                    <Image
                       src={item.imageUrl}
                       alt={item.title}
-                      className="h-full w-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
                     />
                   </div>
 

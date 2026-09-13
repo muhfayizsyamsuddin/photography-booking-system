@@ -1,6 +1,13 @@
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Packages",
+  description:
+    "View available photography packages and session pricing.",
+};
 
 export default async function PackagesPage() {
   const packages = await prisma.package.findMany({

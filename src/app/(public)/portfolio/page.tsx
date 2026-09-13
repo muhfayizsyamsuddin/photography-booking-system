@@ -1,4 +1,12 @@
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Portfolio",
+  description:
+    "Explore selected photography sessions and client work.",
+};
 
 export default async function PortfolioPage() {
   const portfolios = await prisma.portfolio.findMany({
@@ -46,10 +54,12 @@ export default async function PortfolioPage() {
                 className="group overflow-hidden rounded-2xl border border-gray-200 bg-white"
               >
                 <div className="aspect-4/3 overflow-hidden bg-gray-100">
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover"
                   />
                 </div>
 

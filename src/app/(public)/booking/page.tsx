@@ -1,5 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import BookingForm from "./booking-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Book a Session",
+  description:
+    "Submit a photography booking request for your preferred package and schedule.",
+};
 
 type BookingPageProps = {
   searchParams: Promise<{
