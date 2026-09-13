@@ -1,23 +1,13 @@
-import { getServerSession } from "next-auth";
-
-import { authOptions } from "@/lib/auth";
-
-export default async function AdminDashboardPage() {
-  const session = await getServerSession(authOptions);
-
+export default function AdminDashboardPage() {
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold">
-        Admin Dashboard
+    <div>
+      <h1 className="text-3xl font-bold text-gray-900">
+        Dashboard
       </h1>
 
-      <p className="mt-4">
-        Welcome, {session?.user.name}
+      <p className="mt-2 text-gray-600">
+        Overview of photography bookings and content.
       </p>
-
-      <p className="text-sm text-gray-500">
-        {session?.user.email} · {session?.user.role}
-      </p>
-    </main>
+    </div>
   );
 }

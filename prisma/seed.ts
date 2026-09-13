@@ -46,6 +46,40 @@ async function main() {
     },
   });
 
+  await prisma.package.upsert({
+    where: {
+      slug: "graduation-basic",
+    },
+    update: {},
+    create: {
+      name: "Graduation Basic",
+      slug: "graduation-basic",
+      description: "Photography package for graduation sessions.",
+      price: 500000,
+      duration: "1 hour",
+      includedServices: "1 photographer, edited photos, online delivery",
+      isActive: true,
+      displayOrder: 1,
+    },
+  });
+
+  await prisma.package.upsert({
+    where: {
+      slug: "couple-session",
+    },
+    update: {},
+    create: {
+      name: "Couple Session",
+      slug: "couple-session",
+      description: "Photography session for couples.",
+      price: 750000,
+      duration: "1.5 hours",
+      includedServices: "1 photographer, edited photos, online delivery",
+      isActive: true,
+      displayOrder: 2,
+    },
+  });
+
   console.log("Admin seeded successfully:");
   console.log({
     id: admin.id,
