@@ -261,12 +261,21 @@ export default async function HomePage() {
             Tell me what you have in mind.
           </p>
 
-          <Link
-            href="/booking"
-            className="mt-8 inline-block border-b border-[#171717] pb-1 text-sm font-medium"
-          >
-            Book your session ↗
-          </Link>
+          <div className="mt-8 flex items-center justify-center gap-7">
+            <Link
+              href="/booking"
+              className="border-b border-[#171717] pb-1 text-sm font-medium"
+            >
+              Book your session ↗
+            </Link>
+
+            <Link
+              href="/contact"
+              className="text-sm text-[#6d6963] transition hover:text-[#171717]"
+            >
+              Contact me
+            </Link>
+          </div>
         </div>
       </section>
     </main>

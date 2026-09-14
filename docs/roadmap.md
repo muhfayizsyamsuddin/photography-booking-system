@@ -31,7 +31,7 @@ Deliverables:
 Status:
 
 ```text
-IN PROGRESS
+COMPLETED
 ```
 
 ## Phase 1 — Project Foundation
@@ -55,6 +55,12 @@ Expected result:
 - Application runs locally
 - Database connection works
 - Prisma migration works
+
+Status:
+
+```text
+COMPLETED
+```
 
 ## Phase 2 — Database
 
@@ -84,6 +90,12 @@ Expected result:
 
 Database structure is stable for Version 1
 
+Status:
+
+```text
+COMPLETED
+```
+
 ## Phase 3 — Admin Authentication
 
 Tasks:
@@ -100,6 +112,12 @@ Tasks:
 Expected result:
 
 Only authenticated ADMIN users can access /admin
+
+Status:
+
+```text
+COMPLETED
+```
 
 ## Phase 4 — Public Website
 
@@ -128,6 +146,12 @@ Tasks:
 Expected result:
 
 Visitors can browse the photography business website on mobile and desktop
+
+Status:
+
+```text
+COMPLETED
+```
 
 ## Phase 5 — Booking Flow
 
@@ -159,6 +183,12 @@ Version 1 does not automatically check schedule conflicts.
 
 Booking requests still require manual confirmation.
 
+Status:
+
+```text
+COMPLETED
+```
+
 ## Phase 6 — Admin Booking Management
 
 Tasks:
@@ -184,6 +214,12 @@ Expected result:
 
 Photographer can manage the full booking workflow from the admin dashboard
 
+Status:
+
+```text
+COMPLETED
+```
+
 ## Phase 7 — Package CMS
 
 Tasks:
@@ -199,6 +235,12 @@ Tasks:
 Expected result:
 
 Admin can manage packages without modifying source code
+
+Status:
+
+```text
+COMPLETED
+```
 
 ## Phase 8 — Portfolio CMS
 
@@ -217,6 +259,12 @@ Tasks:
 Expected result:
 
 Admin can manage public portfolio content from the CMS
+
+Status:
+
+```text
+COMPLETED
+```
 
 ## Phase 9 — Polish
 
@@ -239,6 +287,12 @@ Tasks:
 Expected result:
 
 Version 1 feels complete and ready for real usage
+
+Status:
+
+```text
+COMPLETED
+```
 
 ## Phase 10 — Deployment
 

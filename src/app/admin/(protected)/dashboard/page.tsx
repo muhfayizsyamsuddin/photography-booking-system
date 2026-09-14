@@ -22,10 +22,13 @@ function getStatusClasses(status: string) {
 }
 
 export default async function AdminDashboardPage() {
+  const now = new Date();
+
   const [
     totalBookings,
     newBookings,
     confirmedBookings,
+    upcomingBookings,
     activePackages,
     publishedPortfolio,
     recentBookings,
@@ -41,6 +44,17 @@ export default async function AdminDashboardPage() {
     prisma.booking.count({
       where: {
         status: "CONFIRMED",
+      },
+    }),
+
+    prisma.booking.count({
+      where: {
+        bookingDate: {
+          gte: now,
+        },
+        status: {
+          in: ["NEW", "CONFIRMED"],
+        },
       },
     }),
 
@@ -93,6 +107,11 @@ export default async function AdminDashboardPage() {
       value: publishedPortfolio,
       description: "Visible portfolio items",
     },
+    {
+      label: "Upcoming Bookings",
+      value: upcomingBookings,
+      description: "Scheduled sessions ahead",
+    },
   ];
 
   return (
@@ -122,15 +141,11 @@ export default async function AdminDashboardPage() {
       </header>
 
       <section>
-        <div className="grid grid-cols-2 border-l border-t border-[#d8d2ca] xl:grid-cols-5">
-          {stats.map((item, index) => (
+        <div className="grid grid-cols-2 border-l border-t border-[#d8d2ca] xl:grid-cols-6">
+          {stats.map((item) => (
             <div
               key={item.label}
-              className={`min-h-32 border-b border-r border-[#d8d2ca] bg-[#fcfaf7] p-5 ${
-                index === stats.length - 1
-                  ? "col-span-2 xl:col-span-1"
-                  : ""
-              }`}
+              className="min-h-32 border-b border-r border-[#d8d2ca] bg-[#fcfaf7] p-5"
             >
               <p className="text-xs font-medium uppercase tracking-[0.14em] text-[#8b7866]">
                 {item.label}

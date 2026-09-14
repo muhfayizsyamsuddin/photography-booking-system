@@ -47,6 +47,18 @@ export default async function BookingDetailPage({
     notFound();
   }
 
+  const rawPhone = booking.phone.replace(/\D/g, "");
+
+  const whatsappNumber = rawPhone.startsWith("0")
+    ? `62${rawPhone.slice(1)}`
+    : rawPhone;
+
+  const whatsappUrl = `https://wa.me/${whatsappNumber}`;
+
+  const emailUrl = booking.email
+    ? `mailto:${booking.email}`
+    : null;
+
   return (
     <div className="space-y-10">
       <header className="border-b border-[#d8d2ca] pb-8">
@@ -205,7 +217,43 @@ export default async function BookingDetailPage({
           </section>
         </div>
 
-        <aside>
+        <aside className="space-y-6">
+          <div className="border border-[#d8d2ca] bg-[#fcfaf7]">
+            <div className="border-b border-[#d8d2ca] px-5 py-4">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">
+                Client Contact
+              </p>
+
+              <h2 className="mt-2 font-semibold text-[#171717]">
+                Contact Client
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-[#6d6963]">
+                Reach out to the client regarding this booking request.
+              </p>
+            </div>
+
+            <div className="space-y-3 p-5">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-[#171717] px-4 py-2.5 text-center text-sm font-medium text-white transition-opacity hover:opacity-85"
+              >
+                Contact via WhatsApp ↗
+              </a>
+
+              {emailUrl && (
+                <a
+                  href={emailUrl}
+                  className="block w-full border border-[#d8d2ca] px-4 py-2.5 text-center text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee]"
+                >
+                  Send Email ↗
+                </a>
+              )}
+            </div>
+          </div>
+
           <div className="border border-[#d8d2ca] bg-[#fcfaf7] lg:sticky lg:top-8">
             <div className="border-b border-[#d8d2ca] px-5 py-4">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">

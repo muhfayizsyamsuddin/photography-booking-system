@@ -41,6 +41,23 @@ export const metadata: Metadata = {
     "couple photography",
     "Makassar photographer",
   ],
+
+  openGraph: {
+    type: "website",
+    url: siteUrl,
+    title: "Photography",
+    description:
+      "Professional photography services for graduation, weddings, couples, families, and special events.",
+    siteName: "Photography",
+    locale: "en_US",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Photography",
+    description:
+      "Professional photography services for graduation, weddings, couples, families, and special events.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

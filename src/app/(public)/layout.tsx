@@ -9,7 +9,7 @@ export default function PublicLayout({
   children,
 }: PublicLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-[#f6f3ee]">
       <PublicNavbar />
 
       <div className="flex-1">
