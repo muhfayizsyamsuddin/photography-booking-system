@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { authOptions } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 type ProtectedAdminLayoutProps = {
   children: React.ReactNode;
 };
