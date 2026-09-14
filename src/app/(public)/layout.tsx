@@ -1,6 +1,8 @@
 import { PublicFooter } from "@/components/public/footer";
 import { PublicNavbar } from "@/components/public/navbar";
 
+export const dynamic = "force-dynamic";
+
 type PublicLayoutProps = {
   children: React.ReactNode;
 };
