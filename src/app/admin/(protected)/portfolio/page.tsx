@@ -72,6 +72,10 @@ export default async function AdminPortfolioPage() {
                     Order
                   </th>
 
+                  <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
+                    Image
+                  </th>
+
                   <th className="px-6 py-4 text-right text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
                     Action
                   </th>
@@ -116,6 +120,18 @@ export default async function AdminPortfolioPage() {
 
                     <td className="px-6 py-5 text-sm text-[#6d6963]">
                       {item.displayOrder}
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <div className="flex flex-wrap gap-2">
+                        <span className="border border-[#d8d2ca] bg-[#f6f3ee] px-2 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#6d6963]">
+                          {item.imageOrientation}
+                        </span>
+
+                        <span className="border border-[#d8d2ca] bg-[#f6f3ee] px-2 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#6d6963]">
+                          {item.imagePosition}
+                        </span>
+                      </div>
                     </td>
 
                     <td className="px-6 py-5 text-right">
@@ -175,6 +191,26 @@ export default async function AdminPortfolioPage() {
 
                     <dd className="mt-1 text-sm text-[#171717]">
                       {item.displayOrder}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-[0.14em] text-[#8b7866]">
+                      Orientation
+                    </dt>
+
+                    <dd className="mt-1 text-sm text-[#171717]">
+                      {item.imageOrientation}
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-[0.14em] text-[#8b7866]">
+                      Position
+                    </dt>
+
+                    <dd className="mt-1 text-sm text-[#171717]">
+                      {item.imagePosition}
                     </dd>
                   </div>
 

@@ -4,14 +4,47 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
 const bookingSchema = z.object({
-  clientName: z.string().min(2),
-  phone: z.string().min(8),
-  email: z.string().email().optional().or(z.literal("")),
+  clientName: z.string().trim().min(2, "Name is too short"),
+
+  phone: z
+    .string()
+    .trim()
+    .min(8, "Phone number is too short")
+    .max(20, "Phone number is too long")
+    .regex(
+      /^[0-9+\s()-]+$/,
+      "Phone number contains invalid characters"
+    )
+    .refine(
+      (value) => {
+        const digits = value.replace(/\D/g, "");
+        return digits.length >= 8 && digits.length <= 15;
+      },
+      {
+        message: "Invalid phone number",
+      }
+    ),
+
+  email: z
+    .string()
+    .trim()
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
+
   packageId: z.string().min(1),
-  bookingDate: z.string().min(1),
-  bookingTime: z.string().min(1),
-  location: z.string().min(3),
-  notes: z.string().optional(),
+
+  bookingDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid booking date"),
+
+  bookingTime: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/, "Invalid booking time"),
+
+  location: z.string().trim().min(3),
+
+  notes: z.string().trim().optional(),
 });
 
 export async function POST(request: Request) {
@@ -34,6 +67,26 @@ export async function POST(request: Request) {
     }
 
     const data = result.data;
+    const normalizedPhone = data.phone.trim();
+    const selectedDate = new Date(`${data.bookingDate}T00:00:00`);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (
+      Number.isNaN(selectedDate.getTime()) ||
+      selectedDate < today
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Booking date cannot be in the past.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
     const photographyPackage = await prisma.package.findFirst({
       where: {
@@ -57,10 +110,10 @@ export async function POST(request: Request) {
     const booking = await prisma.booking.create({
       data: {
         clientName: data.clientName,
-        phone: data.phone,
+        phone: normalizedPhone,
         email: data.email || null,
         packageId: data.packageId,
-        bookingDate: new Date(`${data.bookingDate}T00:00:00`),
+        bookingDate: selectedDate,
         bookingTime: data.bookingTime,
         location: data.location,
         notes: data.notes || null,

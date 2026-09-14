@@ -19,6 +19,7 @@ export default function BookingForm({
   selectedPackageId,
 }: BookingFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const today = new Date().toLocaleDateString("en-CA");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,50 +74,75 @@ export default function BookingForm({
     <form onSubmit={handleSubmit} className="space-y-10">
       <div className="grid gap-8 md:grid-cols-2">
         <div className="md:col-span-2">
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label 
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+            htmlFor="clientName"
+          >
             Your Name
           </label>
 
           <input
+            id="clientName"
             name="clientName"
             required
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none transition placeholder:text-[#aaa198] focus:border-[#171717]"
           />
         </div>
 
         <div>
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="phone"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             WhatsApp / Phone
           </label>
 
           <input
+            id="phone"
             name="phone"
+            type="tel"
             required
+            minLength={8}
+            maxLength={20}
+            pattern="[0-9+ ()-]+"
+            placeholder="0812 3456 7890"
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none transition focus:border-[#171717]"
           />
         </div>
 
         <div>
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="email"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             Email
           </label>
 
           <input
+            id="email"
             name="email"
             type="email"
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none transition focus:border-[#171717]"
           />
         </div>
 
         <div className="md:col-span-2">
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="packageId"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             Package
           </label>
 
           <select
+            id="packageId"
             name="packageId"
             required
             defaultValue={selectedPackageId ?? ""}
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
           >
             <option value="" disabled>
@@ -132,51 +158,72 @@ export default function BookingForm({
         </div>
 
         <div>
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="bookingDate"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             Date
           </label>
 
           <input
+            id="bookingDate"
             name="bookingDate"
             type="date"
+            min={today}
             required
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
           />
         </div>
 
         <div>
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="bookingTime"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             Time
           </label>
 
           <input
+            id="bookingTime"
             name="bookingTime"
             type="time"
             required
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
           />
         </div>
 
         <div className="md:col-span-2">
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="location"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             Location
           </label>
 
           <input
+            id="location"
             name="location"
             required
+            disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
           />
         </div>
 
         <div className="md:col-span-2">
-          <label className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+          <label
+            htmlFor="notes"
+            className="mb-3 block text-xs uppercase tracking-[0.16em] text-[#8b7866]"
+          >
             Tell me about your session
           </label>
 
           <textarea
+            id="notes"
             name="notes"
             rows={5}
+            disabled={isLoading}
             className="w-full resize-none border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base leading-7 text-[#171717] outline-none focus:border-[#171717]"
           />
         </div>
