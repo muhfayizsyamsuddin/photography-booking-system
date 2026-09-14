@@ -1,0 +1,52 @@
+services:
+  app:
+    image: faizms14/photography-booking-system:v1.0
+    container_name: photography-booking-app
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - proxy_net
+      - photography-net
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proxy_net
+      traefik.http.routers.photography.rule: Host(`photobooth.faizms.com`)
+      traefik.http.routers.photography.entrypoints: websecure
+      traefik.http.routers.photography.tls.certresolver: myresolver
+      traefik.http.services.photography.loadbalancer.server.port: 3000
+    restart: unless-stopped
+
+  database:
+    image: postgres:17-alpine
+    container_name: photography-booking-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - photography-db-data:/var/lib/postgresql/data
+    networks:
+      - photography-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U photography_user -d photography_booking"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  photography-net:
+    driver: bridge
+
+  proxy_net:
+    external: true
+
+volumes:
+  photography-db-data:
