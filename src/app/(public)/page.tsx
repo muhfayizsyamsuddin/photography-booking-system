@@ -41,23 +41,24 @@ export default async function HomePage() {
     prisma.portfolio.findMany({
       where: { isPublished: true },
       orderBy: { displayOrder: "asc" },
-      take: 6,
+      take: 7,
     }),
   ]);
 
   const heroPortfolio = portfolios[0];
+  const selectedPortfolios = portfolios.slice(1, 7);
 
   return (
     <main>
       <section className="bg-[#f6f3ee]">
-        <div className="mx-auto grid min-h-180 max-w-7xl lg:grid-cols-[0.78fr_1.22fr]">
+        <div className="mx-auto grid min-h-[calc(100vh-65px)] max-w-7xl lg:grid-cols-[0.7fr_1.3fr]">
           <div className="flex items-center px-6 py-16 lg:px-10 lg:py-20">
             <div className="max-w-xl">
               <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
                 Photographer · Makassar
               </p>
 
-              <h1 className="mt-7 font-serif text-6xl leading-[0.92] tracking-[-0.035em] text-[#171717] md:text-7xl lg:text-[5.9rem]">
+              <h1 className="mt-7 font-serif text-[3.8rem] leading-[0.88] tracking-[-0.04em] text-[#171717] sm:text-7xl lg:text-[6.4rem]">
                 Stories worth
                 <br />
                 remembering.
@@ -83,60 +84,74 @@ export default async function HomePage() {
                   View portfolio
                 </Link>
               </div>
+              <div className="mt-16 flex items-center gap-5 text-[10px] uppercase tracking-[0.18em] text-[#8b7866]">
+                <span>Makassar</span>
+                <span className="h-px w-8 bg-[#bfb7ae]" />
+                <span>Graduation · Wedding · Portrait</span>
+              </div>
             </div>
           </div>
 
-          <div className="relative min-h-140 lg:min-h-full">
-            {heroPortfolio ? (
-              <Image
-                src={heroPortfolio.imageUrl}
-                alt={heroPortfolio.title}
-                fill
-                priority
-                loading="eager"
-                sizes="(max-width: 1024px) 100vw, 58vw"
-                className={`object-cover ${getImagePosition(
-                  heroPortfolio.imagePosition
-                )}`}
-                // className="object-cover"
-                // className="object-cover object-top"
-                // className="object-cover object-[center_25%]"
-              />
-            ) : (
-              <div className="h-full bg-[#ded8d0]" />
-            )}
+          <div className="relative px-0 lg:py-6 lg:pr-6">
+            {/* <div className="absolute inset-y-10 right-0 hidden w-px bg-[#d8d2ca] lg:block" /> */}
+
+            <div className="relative">
+              <div className="absolute -bottom-4 -right-4 hidden h-full w-full border border-[#d8d2ca] lg:block" />
+
+              <div className="relative min-h-130 overflow-hidden border border-[#d8d2ca] lg:min-h-[calc(90vh-124px)]">
+                {heroPortfolio ? (
+                  <Image
+                    src={heroPortfolio.imageUrl}
+                    alt={heroPortfolio.title}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    className={`object-cover ${getImagePosition(
+                      heroPortfolio.imagePosition
+                    )}`}
+                  />
+                ) : (
+                  <div className="h-full bg-[#ded8d0]" />
+                )}
+              </div>
+              <p className="mt-3 text-right text-[10px] uppercase tracking-[0.18em] text-[#8b7866]">
+                Selected Portrait · Makassar
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="border-t border-[#d8d2ca] bg-[#fcfaf7]">
-        <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-          <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="mx-auto max-w-7xl px-6 pb-24 pt-16 lg:px-10 lg:pb-32 lg:pt-20">
+          <div className="mb-14 grid gap-8 border-b border-[#d8d2ca] pb-10 md:grid-cols-[1fr_auto] md:items-end">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
                 Selected Work
               </p>
 
-              <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#171717]">
-                A few stories, carefully preserved.
+              <h2 className="mt-5 max-w-2xl font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#171717] md:text-6xl">
+                A few stories,
+                <br />
+                carefully preserved.
               </h2>
             </div>
 
             <Link
               href="/portfolio"
-              className="self-start border-b border-[#171717] pb-1 text-sm font-medium"
+              className="self-start border-b border-[#171717] pb-1 text-sm font-medium md:self-end"
             >
               View all work ↗
             </Link>
           </div>
 
-          {portfolios.length === 0 ? (
+          {selectedPortfolios.length === 0 ? (
             <p className="text-sm text-[#6d6963]">
               Portfolio is currently unavailable.
             </p>
           ) : (
             <div className="grid gap-10 md:grid-cols-12">
-              {portfolios.map((item, index) => {
+              {selectedPortfolios.map((item, index) => {
                 const isLarge = index % 3 === 0;
                 return (
                   <article
