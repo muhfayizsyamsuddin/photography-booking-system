@@ -13,6 +13,19 @@ const portfolioSchema = z.object({
   imagePublicId: z.string().min(1),
   location: z.string().optional(),
   photographyType: z.string().optional(),
+
+  imageOrientation: z.enum([
+    "PORTRAIT",
+    "LANDSCAPE",
+    "SQUARE",
+  ]),
+
+  imagePosition: z.enum([
+    "TOP",
+    "CENTER",
+    "BOTTOM",
+  ]),
+
   displayOrder: z.number().int(),
   isPublished: z.boolean(),
 });
@@ -77,6 +90,10 @@ export async function POST(request: Request) {
         imagePublicId: result.data.imagePublicId,
         location: result.data.location || null,
         photographyType: result.data.photographyType || null,
+
+        imageOrientation: result.data.imageOrientation,
+        imagePosition: result.data.imagePosition,
+
         displayOrder: result.data.displayOrder,
         isPublished: result.data.isPublished,
       },

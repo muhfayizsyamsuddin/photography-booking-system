@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { generateSlug } from "@/lib/slug";
 import { appToast } from "@/lib/toast";
 
 const inputClassName =
@@ -13,7 +13,8 @@ const labelClassName =
 
 export default function PackageForm() {
   const router = useRouter();
-
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -76,6 +77,13 @@ export default function PackageForm() {
             name="name"
             required
             placeholder="Graduation Basic"
+            value={name}
+            onChange={(event) => {
+              const value = event.target.value;
+
+              setName(value);
+              setSlug(generateSlug(value));
+            }}
             disabled={isLoading}
             className={inputClassName}
           />
@@ -91,6 +99,8 @@ export default function PackageForm() {
             name="slug"
             required
             placeholder="graduation-basic"
+            value={slug}
+            onChange={(event) => setSlug(event.target.value)}
             disabled={isLoading}
             className={inputClassName}
           />

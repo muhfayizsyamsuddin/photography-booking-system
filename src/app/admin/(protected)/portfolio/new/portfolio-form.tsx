@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { generateSlug } from "@/lib/slug";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { appToast } from "@/lib/toast";
 
@@ -17,6 +17,8 @@ export default function PortfolioForm() {
 
   const [imageUrl, setImageUrl] = useState("");
   const [imagePublicId, setImagePublicId] = useState("");
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,6 +41,10 @@ export default function PortfolioForm() {
       imagePublicId,
       location: formData.get("location"),
       photographyType: formData.get("photographyType"),
+
+      imageOrientation: formData.get("imageOrientation"),
+      imagePosition: formData.get("imagePosition"),
+
       displayOrder: Number(formData.get("displayOrder")),
       isPublished: formData.get("isPublished") === "on",
     };
@@ -84,7 +90,14 @@ export default function PortfolioForm() {
             id="title"
             name="title"
             required
-            placeholder="Graduation Session at UNHAS"
+            value={title}
+            onChange={(event) => {
+              const value = event.target.value;
+
+              setTitle(value);
+              setSlug(generateSlug(value));
+            }}
+            placeholder="Graduation Session"
             disabled={isLoading}
             className={inputClassName}
           />
@@ -99,7 +112,9 @@ export default function PortfolioForm() {
             id="slug"
             name="slug"
             required
-            placeholder="graduation-session-unhas"
+            value={slug}
+            onChange={(event) => setSlug(event.target.value)}
+            placeholder="graduation-session"
             disabled={isLoading}
             className={inputClassName}
           />
@@ -169,6 +184,52 @@ export default function PortfolioForm() {
             disabled={isLoading}
             className={inputClassName}
           />
+        </div>
+      </div>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div>
+          <label htmlFor="imageOrientation" className={labelClassName}>
+            Image Orientation
+          </label>
+
+          <select
+            id="imageOrientation"
+            name="imageOrientation"
+            defaultValue="PORTRAIT"
+            disabled={isLoading}
+            className={inputClassName}
+          >
+            <option value="PORTRAIT">Portrait</option>
+            <option value="LANDSCAPE">Landscape</option>
+            <option value="SQUARE">Square</option>
+          </select>
+
+          <p className="mt-2 text-xs leading-5 text-[#6d6963]">
+            Controls the image ratio on portfolio and selected work.
+          </p>
+        </div>
+
+        <div>
+          <label htmlFor="imagePosition" className={labelClassName}>
+            Image Position
+          </label>
+
+          <select
+            id="imagePosition"
+            name="imagePosition"
+            defaultValue="CENTER"
+            disabled={isLoading}
+            className={inputClassName}
+          >
+            <option value="TOP">Top</option>
+            <option value="CENTER">Center</option>
+            <option value="BOTTOM">Bottom</option>
+          </select>
+
+          <p className="mt-2 text-xs leading-5 text-[#6d6963]">
+            Controls which part of the image stays visible when cropped.
+          </p>
         </div>
       </div>
 

@@ -9,6 +9,34 @@ export const metadata: Metadata = {
     "Explore selected photography sessions and client work.",
 };
 
+function getImageAspect(orientation: string) {
+  switch (orientation) {
+    case "LANDSCAPE":
+      return "aspect-4/3";
+
+    case "SQUARE":
+      return "aspect-square";
+
+    case "PORTRAIT":
+    default:
+      return "aspect-3/4";
+  }
+}
+
+function getImagePosition(position: string) {
+  switch (position) {
+    case "TOP":
+      return "object-top";
+
+    case "BOTTOM":
+      return "object-bottom";
+
+    case "CENTER":
+    default:
+      return "object-center";
+  }
+}
+
 export default async function PortfolioPage() {
   const portfolios = await prisma.portfolio.findMany({
     where: {
@@ -71,13 +99,19 @@ export default async function PortfolioPage() {
                         : "lg:col-span-7 lg:col-start-6"
                     }
                   >
-                    <div className="relative aspect-4/3 overflow-hidden lg:aspect-5/4">
+                    <div
+                      className={`relative overflow-hidden ${getImageAspect(
+                        item.imageOrientation
+                      )}`}
+                    >
                       <Image
                         src={item.imageUrl}
                         alt={item.title}
                         fill
                         sizes="(max-width: 1024px) 100vw, 65vw"
-                        className="object-cover"
+                        className={`object-cover ${getImagePosition(
+                          item.imagePosition
+                        )}`}
                       />
                     </div>
                   </div>

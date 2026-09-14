@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { generateSlug } from "@/lib/slug";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { appToast } from "@/lib/toast";
@@ -16,6 +16,10 @@ type PortfolioData = {
   imagePublicId: string | null;
   location: string | null;
   photographyType: string | null;
+
+  imageOrientation: "PORTRAIT" | "LANDSCAPE" | "SQUARE";
+  imagePosition: "TOP" | "CENTER" | "BOTTOM";
+
   isPublished: boolean;
   displayOrder: number;
 };
@@ -40,6 +44,8 @@ export default function EditPortfolioForm({
     portfolio.imagePublicId ?? ""
   );
 
+  const [title, setTitle] = useState(portfolio.title);
+  const [slug, setSlug] = useState(portfolio.slug);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -86,6 +92,10 @@ export default function EditPortfolioForm({
       imagePublicId,
       location: formData.get("location"),
       photographyType: formData.get("photographyType"),
+
+      imageOrientation: formData.get("imageOrientation"),
+      imagePosition: formData.get("imagePosition"),
+
       displayOrder: Number(formData.get("displayOrder")),
       isPublished: formData.get("isPublished") === "on",
     };
@@ -172,8 +182,14 @@ export default function EditPortfolioForm({
             <input
               id="title"
               name="title"
-              defaultValue={portfolio.title}
               required
+              value={title}
+              onChange={(event) => {
+                const value = event.target.value;
+
+                setTitle(value);
+                setSlug(generateSlug(value));
+              }}
               disabled={isLoading || isDeleting}
               className={inputClassName}
             />
@@ -187,8 +203,9 @@ export default function EditPortfolioForm({
             <input
               id="slug"
               name="slug"
-              defaultValue={portfolio.slug}
               required
+              value={slug}
+              onChange={(event) => setSlug(event.target.value)}
               disabled={isLoading || isDeleting}
               className={inputClassName}
             />
@@ -267,6 +284,52 @@ export default function EditPortfolioForm({
               disabled={isLoading || isDeleting}
               className={inputClassName}
             />
+          </div>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div>
+            <label htmlFor="imageOrientation" className={labelClassName}>
+              Image Orientation
+            </label>
+
+            <select
+              id="imageOrientation"
+              name="imageOrientation"
+              defaultValue={portfolio.imageOrientation}
+              disabled={isLoading || isDeleting}
+              className={inputClassName}
+            >
+              <option value="PORTRAIT">Portrait</option>
+              <option value="LANDSCAPE">Landscape</option>
+              <option value="SQUARE">Square</option>
+            </select>
+
+            <p className="mt-2 text-xs leading-5 text-[#6d6963]">
+              Controls the image ratio on portfolio and selected work.
+            </p>
+          </div>
+
+          <div>
+            <label htmlFor="imagePosition" className={labelClassName}>
+              Image Position
+            </label>
+
+            <select
+              id="imagePosition"
+              name="imagePosition"
+              defaultValue={portfolio.imagePosition}
+              disabled={isLoading || isDeleting}
+              className={inputClassName}
+            >
+              <option value="TOP">Top</option>
+              <option value="CENTER">Center</option>
+              <option value="BOTTOM">Bottom</option>
+            </select>
+
+            <p className="mt-2 text-xs leading-5 text-[#6d6963]">
+              Controls which part of the image stays visible when cropped.
+            </p>
           </div>
         </div>
 

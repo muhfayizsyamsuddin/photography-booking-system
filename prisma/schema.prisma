@@ -18,6 +18,18 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum ImageOrientation {
+  PORTRAIT
+  LANDSCAPE
+  SQUARE
+}
+
+enum ImagePosition {
+  TOP
+  CENTER
+  BOTTOM
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -30,16 +42,16 @@ model User {
 }
 
 model Package {
-  id               String    @id @default(cuid())
+  id               String  @id @default(cuid())
   name             String
-  slug             String    @unique
+  slug             String  @unique
   description      String
   price            Int
   duration         String?
   includedServices String?
   imageUrl         String?
-  isActive         Boolean   @default(true)
-  displayOrder     Int       @default(0)
+  isActive         Boolean @default(true)
+  displayOrder     Int     @default(0)
 
   bookings Booking[]
 
@@ -56,8 +68,12 @@ model Portfolio {
   imagePublicId   String?
   location        String?
   photographyType String?
-  isPublished     Boolean @default(true)
-  displayOrder    Int     @default(0)
+
+  imageOrientation ImageOrientation @default(PORTRAIT)
+  imagePosition    ImagePosition    @default(CENTER)
+
+  isPublished  Boolean @default(true)
+  displayOrder Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -2,6 +2,34 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 
+function getImageAspect(orientation: string) {
+  switch (orientation) {
+    case "LANDSCAPE":
+      return "aspect-4/3";
+
+    case "SQUARE":
+      return "aspect-square";
+
+    case "PORTRAIT":
+    default:
+      return "aspect-3/4";
+  }
+}
+
+function getImagePosition(position: string) {
+  switch (position) {
+    case "TOP":
+      return "object-top";
+
+    case "BOTTOM":
+      return "object-bottom";
+
+    case "CENTER":
+    default:
+      return "object-center";
+  }
+}
+
 export default async function HomePage() {
   const [packages, portfolios] = await Promise.all([
     prisma.package.findMany({
@@ -67,7 +95,10 @@ export default async function HomePage() {
                 priority
                 loading="eager"
                 sizes="(max-width: 1024px) 100vw, 58vw"
-                className="object-cover"
+                className={`object-cover ${getImagePosition(
+                  heroPortfolio.imagePosition
+                )}`}
+                // className="object-cover"
                 // className="object-cover object-top"
                 // className="object-cover object-[center_25%]"
               />
@@ -107,7 +138,6 @@ export default async function HomePage() {
             <div className="grid gap-10 md:grid-cols-12">
               {portfolios.map((item, index) => {
                 const isLarge = index % 3 === 0;
-
                 return (
                   <article
                     key={item.id}
@@ -118,11 +148,9 @@ export default async function HomePage() {
                     }
                   >
                     <div
-                      className={
-                        isLarge
-                          ? "relative aspect-4/3 overflow-hidden"
-                          : "relative aspect-3/4 overflow-hidden"
-                      }
+                      className={`relative overflow-hidden ${getImageAspect(
+                        item.imageOrientation
+                      )}`}
                     >
                       <Image
                         src={item.imageUrl}
@@ -133,9 +161,9 @@ export default async function HomePage() {
                             ? "(max-width: 768px) 100vw, 58vw"
                             : "(max-width: 768px) 100vw, 42vw"
                         }
-                        className="object-cover"
-                        // className="object-cover object-top"
-                        // className="object-cover object-[center_25%]"
+                        className={`object-cover ${getImagePosition(
+                          item.imagePosition
+                        )}`}
                       />
                     </div>
 
