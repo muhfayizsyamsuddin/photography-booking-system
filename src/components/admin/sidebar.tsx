@@ -23,6 +23,10 @@ const navItems = [
     label: "Bookings",
   },
   {
+    href: "/admin/availability",
+    label: "Availability",
+  },
+  {
     href: "/admin/packages",
     label: "Packages",
   },
@@ -109,7 +113,7 @@ export function AdminSidebar({
                   callbackUrl: "/admin/login",
                 })
               }
-              className="mt-5 flex w-full items-center justify-center gap-2 border border-[#d8d2ca] px-3 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee]"
+              className="mt-5 flex w-full cursor-pointer items-center justify-center gap-2 border border-[#d8d2ca] px-3 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee]"
             >
               <LogOut size={15} />
               Sign out

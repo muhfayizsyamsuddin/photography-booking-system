@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import RescheduleForm from "./reschedule-form";
 import { prisma } from "@/lib/prisma";
 import BookingStatusForm from "./status-form";
 
@@ -215,6 +215,29 @@ export default async function BookingDetailPage({
               </div>
             </dl>
           </section>
+          <section className="border border-[#d8d2ca] bg-[#fcfaf7]">
+            <div className="border-b border-[#d8d2ca] px-5 py-4 sm:px-6">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">
+                Schedule
+              </p>
+
+              <h2 className="mt-2 font-semibold text-[#171717]">
+                Reschedule Booking
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-[#6d6963]">
+                Change the booking date or time.
+              </p>
+            </div>
+
+            <div className="p-5 sm:p-6">
+              <RescheduleForm
+                bookingId={booking.id}
+                currentDate={booking.bookingDate.toISOString().slice(0, 10)}
+                currentTime={booking.bookingTime}
+              />
+            </div>
+          </section>
         </div>
 
         <aside className="space-y-6">
@@ -254,7 +277,7 @@ export default async function BookingDetailPage({
             </div>
           </div>
 
-          <div className="border border-[#d8d2ca] bg-[#fcfaf7] lg:sticky lg:top-8">
+          <div className="border border-[#d8d2ca] bg-[#fcfaf7]">
             <div className="border-b border-[#d8d2ca] px-5 py-4">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">
                 Management

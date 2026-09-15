@@ -74,6 +74,71 @@ export async function PATCH(
     );
   }
 
+  if (result.data.status === "CONFIRMED") {
+    const availabilityDate = new Date(
+      `${booking.bookingDate.toISOString().slice(0, 10)}T00:00:00.000Z`
+    );
+
+    const availabilityBlocks =
+      await prisma.availabilityBlock.findMany({
+        where: {
+          date: availabilityDate,
+        },
+      });
+
+    const isBlocked = availabilityBlocks.some((block) => {
+      const isFullDay = !block.startTime && !block.endTime;
+
+      if (isFullDay) {
+        return true;
+      }
+
+      if (!block.startTime || !block.endTime) {
+        return false;
+      }
+
+      return (
+        booking.bookingTime >= block.startTime &&
+        booking.bookingTime < block.endTime
+      );
+    });
+
+    if (isBlocked) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "This booking conflicts with an unavailable schedule.",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+
+    const conflictingBooking = await prisma.booking.findFirst({
+      where: {
+        id: {
+          not: booking.id,
+        },
+        bookingDate: booking.bookingDate,
+        bookingTime: booking.bookingTime,
+        status: "CONFIRMED",
+      },
+    });
+
+    if (conflictingBooking) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "This time slot is already confirmed for another booking.",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+  }
+
   const updatedBooking = await prisma.booking.update({
     where: {
       id,

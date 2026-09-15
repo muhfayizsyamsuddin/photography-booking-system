@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { appToast } from "@/lib/toast";
+import { ChevronDown } from "lucide-react";
 
 type Package = {
   id: string;
@@ -9,17 +10,80 @@ type Package = {
   price: number;
 };
 
+type AvailabilityBlock = {
+  date: string;
+  startTime: string | null;
+  endTime: string | null;
+};
+
+type ConfirmedBooking = {
+  date: string;
+  time: string;
+};
+
 type BookingFormProps = {
   packages: Package[];
   selectedPackageId?: string;
+  availabilityBlocks: AvailabilityBlock[];
+  confirmedBookings: ConfirmedBooking[];
 };
 
 export default function BookingForm({
   packages,
   selectedPackageId,
+  availabilityBlocks,
+  confirmedBookings,
 }: BookingFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [isTimeOpen, setIsTimeOpen] = useState(false);
   const today = new Date().toLocaleDateString("en-CA");
+
+  const timeSlots = [
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00",
+  ];
+
+  const selectedDateBlocks = availabilityBlocks.filter(
+    (block) => block.date === selectedDate
+  );
+
+  const isFullDayBlocked = selectedDateBlocks.some(
+    (block) => !block.startTime && !block.endTime
+  );
+
+  const availableTimeSlots = timeSlots.filter((time) => {
+    const blockedByAvailability = selectedDateBlocks.some((block) => {
+      if (!block.startTime || !block.endTime) {
+        return false;
+      }
+
+      return time >= block.startTime && time < block.endTime;
+    });
+
+    const blockedByConfirmedBooking = confirmedBookings.some(
+      (booking) =>
+        booking.date === selectedDate &&
+        booking.time === time
+    );
+
+    return !blockedByAvailability && !blockedByConfirmedBooking;
+  });
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -171,6 +235,12 @@ export default function BookingForm({
             type="date"
             min={today}
             required
+            value={selectedDate}
+            onChange={(event) => {
+              setSelectedDate(event.target.value);
+              setSelectedTime("");
+              setIsTimeOpen(false);
+            }}
             disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
           />
@@ -184,14 +254,79 @@ export default function BookingForm({
             Time
           </label>
 
-          <input
-            id="bookingTime"
-            name="bookingTime"
-            type="time"
-            required
-            disabled={isLoading}
-            className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
-          />
+          <div className="relative">
+            <input
+              type="hidden"
+              name="bookingTime"
+              value={selectedTime}
+            />
+
+            <button
+              type="button"
+              onClick={() => setIsTimeOpen((prev) => !prev)}
+              disabled={
+                isLoading ||
+                !selectedDate ||
+                isFullDayBlocked ||
+                availableTimeSlots.length === 0
+              }
+              className="flex w-full items-center justify-between border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-left text-base text-[#171717] outline-none transition-colors hover:border-[#171717] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <span className={!selectedTime ? "text-[#8b837a]" : ""}>
+                {isFullDayBlocked
+                  ? "Unavailable"
+                  : availableTimeSlots.length === 0 && selectedDate
+                    ? "No available slots"
+                    : selectedTime || "Select time"}
+              </span>
+
+              <ChevronDown
+                size={16}
+                className={`transition-transform duration-200 ${
+                  isTimeOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {isTimeOpen &&
+              !isFullDayBlocked &&
+              availableTimeSlots.length > 0 && (
+                <div className="absolute left-0 top-full z-30 mt-2 max-h-64 w-full overflow-y-auto border border-[#d8d2ca] bg-[#fcfaf7] shadow-[0_16px_40px_rgba(23,23,23,0.10)]">
+                  <div className="grid grid-cols-3 p-2 sm:grid-cols-4">
+                    {availableTimeSlots.map((time) => (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => {
+                          setSelectedTime(time);
+                          setIsTimeOpen(false);
+                        }}
+                        className={`px-3 py-3 text-center text-sm transition-colors ${
+                          selectedTime === time
+                            ? "bg-[#171717] text-white"
+                            : "text-[#171717] hover:bg-[#f0ece6]"
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+          </div>
+          {isFullDayBlocked && (
+            <p className="mt-2 text-sm text-red-700">
+              This date is unavailable.
+            </p>
+          )}
+
+          {!isFullDayBlocked &&
+            selectedDate &&
+            availableTimeSlots.length === 0 && (
+              <p className="mt-2 text-sm text-red-700">
+                No available time slots for this date.
+              </p>
+            )}
         </div>
 
         <div className="md:col-span-2">
@@ -232,8 +367,8 @@ export default function BookingForm({
       <div className="flex justify-end">
         <button
           type="submit"
-          disabled={isLoading}
-          className="border-b border-[#171717] pb-1 text-sm font-medium text-[#171717] disabled:opacity-50"
+          disabled={isLoading || !selectedTime}
+          className="border-b border-[#171717] pb-1 text-sm font-medium text-[#171717] cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? "Sending..." : "Send request ↗"}
         </button>

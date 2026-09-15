@@ -278,7 +278,7 @@ export default function PortfolioForm() {
           type="button"
           disabled={isLoading}
           onClick={() => router.push("/admin/portfolio")}
-          className="border border-[#d8d2ca] px-4 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee] disabled:cursor-not-allowed disabled:opacity-50"
+          className="border border-[#d8d2ca] px-4 py-2.5 text-sm font-medium text-[#171717] cursor-pointer transition-colors hover:bg-[#f6f3ee] disabled:cursor-not-allowed disabled:opacity-50"
         >
           Cancel
         </button>
@@ -286,7 +286,7 @@ export default function PortfolioForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="bg-[#171717] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
+          className="bg-[#171717] px-5 py-2.5 text-sm font-medium text-white cursor-pointer transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? "Creating..." : "Create Portfolio"}
         </button>

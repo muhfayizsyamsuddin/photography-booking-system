@@ -34,6 +34,35 @@ export default async function BookingPage({
     },
   });
 
+  const availabilityBlocks = await prisma.availabilityBlock.findMany({
+    select: {
+      date: true,
+      startTime: true,
+      endTime: true,
+    },
+  });
+
+  const confirmedBookings = await prisma.booking.findMany({
+    where: {
+      status: "CONFIRMED",
+    },
+    select: {
+      bookingDate: true,
+      bookingTime: true,
+    },
+  });
+
+  const serializedAvailabilityBlocks = availabilityBlocks.map((block) => ({
+    date: block.date.toISOString().slice(0, 10),
+    startTime: block.startTime,
+    endTime: block.endTime,
+  }));
+
+  const serializedConfirmedBookings = confirmedBookings.map((booking) => ({
+    date: booking.bookingDate.toISOString().slice(0, 10),
+    time: booking.bookingTime,
+  }));
+
   return (
     <main className="bg-[#f6f3ee]">
       <section className="mx-auto grid max-w-7xl gap-16 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-28">
@@ -61,6 +90,8 @@ export default async function BookingPage({
           <BookingForm
             packages={packages}
             selectedPackageId={selectedPackageId}
+            availabilityBlocks={serializedAvailabilityBlocks}
+            confirmedBookings={serializedConfirmedBookings}
           />
         </div>
       </section>

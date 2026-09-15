@@ -68,7 +68,9 @@ export async function POST(request: Request) {
 
     const data = result.data;
     const normalizedPhone = data.phone.trim();
-    const selectedDate = new Date(`${data.bookingDate}T00:00:00`);
+    const selectedDate = new Date(
+      `${data.bookingDate}T00:00:00.000Z`
+    );
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -103,6 +105,67 @@ export async function POST(request: Request) {
         },
         {
           status: 404,
+        }
+      );
+    }
+
+    const availabilityDate = new Date(
+      `${data.bookingDate}T00:00:00.000Z`
+    );
+
+    const availabilityBlocks =
+      await prisma.availabilityBlock.findMany({
+        where: {
+          date: availabilityDate,
+        },
+      });
+
+    const isBlocked = availabilityBlocks.some((block) => {
+      const isFullDay = !block.startTime && !block.endTime;
+
+      if (isFullDay) {
+        return true;
+      }
+
+      if (!block.startTime || !block.endTime) {
+        return false;
+      }
+
+      return (
+        data.bookingTime >= block.startTime &&
+        data.bookingTime < block.endTime
+      );
+    });
+
+    if (isBlocked) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "The selected date or time is not available.",
+        },
+        {
+          status: 409,
+        }
+      );
+    }
+
+    const conflictingBooking = await prisma.booking.findFirst({
+      where: {
+        bookingDate: selectedDate,
+        bookingTime: data.bookingTime,
+        status: "CONFIRMED",
+      },
+    });
+
+    if (conflictingBooking) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "The selected time is already booked.",
+        },
+        {
+          status: 409,
         }
       );
     }

@@ -302,7 +302,7 @@ export default function EditPackageForm({
             type="button"
             onClick={() => setShowDeleteConfirm(true)}
             disabled={isLoading || isDeleting}
-            className="border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700 cursor-pointer transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Delete Package
           </button>
@@ -312,7 +312,7 @@ export default function EditPackageForm({
               type="button"
               disabled={isLoading || isDeleting}
               onClick={() => router.push("/admin/packages")}
-              className="border border-[#d8d2ca] px-4 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f6f3ee] disabled:cursor-not-allowed disabled:opacity-50"
+              className="border border-[#d8d2ca] px-4 py-2.5 text-sm font-medium text-[#171717] cursor-pointer transition-colors hover:bg-[#f6f3ee] disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
@@ -320,7 +320,7 @@ export default function EditPackageForm({
             <button
               type="submit"
               disabled={isLoading || isDeleting}
-              className="bg-[#171717] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-[#171717] px-5 py-2.5 text-sm font-medium text-white cursor-pointer transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? "Updating..." : "Update Package"}
             </button>

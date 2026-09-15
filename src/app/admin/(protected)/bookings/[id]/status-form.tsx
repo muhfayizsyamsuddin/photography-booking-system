@@ -92,7 +92,7 @@ export default function BookingStatusForm({
       <button
         type="submit"
         disabled={isLoading || status === currentStatus}
-        className="w-full bg-[#171717] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:bg-[#d8d2ca] disabled:text-[#8b7866]"
+        className="w-full bg-[#171717] px-4 py-2.5 text-sm font-medium cursor-pointer text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:bg-[#d8d2ca] disabled:text-[#8b7866]"
       >
         {isLoading ? "Updating..." : "Update Status"}
       </button>
