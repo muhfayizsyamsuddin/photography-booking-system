@@ -332,23 +332,68 @@ Version 1 is complete when:
 
 ## Goal
 
-Improve day-to-day photography business operations after Version 1 has been validated.
+Improve day-to-day photography business operations after Version 1 has been validated in real usage.
 
-Planned features:
+Version 2 focuses on scheduling, booking operations, payment tracking, and client management.
 
-## Scheduling
+---
+
+## Phase 11 — Scheduling & Availability
+
+Status:
+
+```text
+PLANNED
+```
+Tasks:
 
 - Availability calendar
-- Block unavailable dates
-- Block unavailable time slots
-- Booking conflict prevention
-- Reschedule workflow
+- Admin can block unavailable dates
+- Admin can block unavailable time slots
+- Prevent booking requests on unavailable dates
+- Prevent booking conflicts with existing confirmed bookings
+- Display available booking slots to visitors
+- Reschedule existing bookings
+- Revalidate availability when a booking is rescheduled
 
-## Payment Tracking
+Expected result:
+
+Booking schedules can be managed without manually checking for conflicts.
+
+## Phase 12 — Booking Search & Filtering
+
+Status:
+
+PLANNED
+
+Tasks:
+
+- Search bookings by client name
+- Search bookings by phone or email
+- Filter bookings by status
+- Filter bookings by package
+- Filter bookings by booking date
+- Filter upcoming and past bookings
+- Add pagination when booking volume increases
+
+Expected result:
+
+Admin can quickly find and manage bookings as booking volume grows.
+
+## Phase 13 — Payment Tracking
+
+Status:
+
+PLANNED
+
+Tasks:
 
 - Deposit amount
+- Total payment amount
 - Payment status
 - Upload payment proof
+- Display payment information on booking detail
+- Allow admin to update payment status manually
 
 Payment statuses:
 
@@ -356,34 +401,113 @@ Payment statuses:
 - PARTIALLY_PAID
 - PAID
 
-## Client Management
+Expected result:
+
+Admin can track client payments without relying on a separate spreadsheet.
+
+Important limitation:
+
+Version 2 does not include an automatic payment gateway or automatic payment verification.
+
+## Phase 14 — Client Management
+
+Status:
+
+PLANNED
+
+Tasks:
 
 - Client database
+- Client contact information
 - Client booking history
 - Internal admin notes
 - Search clients
+- Link bookings belonging to the same client
 
-## Package Improvements
+Expected result:
+
+Admin can manage repeat clients and view their booking history.
+
+## Phase 15 — Admin Dashboard Improvements
+
+Status:
+
+PLANNED
+
+Tasks:
+
+- Calendar view
+- Upcoming sessions
+- Booking statistics by status
+- Payment status overview
+- Booking totals by selected period
+- Quick access to bookings requiring attention
+
+Expected result:
+
+The dashboard provides useful operational information for daily business activity.
+
+## Phase 16 — Package Improvements
+
+Status:
+
+PLANNED
+
+Tasks:
 
 - Package add-ons
 - Additional pricing options
+- Enable or disable add-ons
+- Display optional add-ons during booking where appropriate
 
-## Portfolio Improvements
+Expected result:
+
+Photography packages support more flexible service offerings.
+
+## Phase 17 — Portfolio Improvements
+
+Status:
+
+PLANNED
+
+Tasks:
 
 - Portfolio categories
 - Category filtering
+- Improved portfolio organization
 
-## Testimonials
+Expected result:
+
+Visitors can browse photography work by category.
+
+## Phase 18 — Testimonials
+
+Status:
+
+PLANNED
+
+Tasks:
 
 - Testimonial management
+- Publish or unpublish testimonials
 - Public testimonial section
 
-## Admin Improvements
+Expected result:
 
-- Search bookings
-- Filter bookings
-- Calendar view
-- Better dashboard statistics
+Client feedback can be managed from the CMS and displayed publicly.
+
+## Version 2 Completion Criteria
+
+Version 2 is complete when:
+
+- Admin can manage photographer availability.
+- Visitors cannot submit booking requests for unavailable or conflicting slots.
+- Existing bookings can be rescheduled.
+- Admin can search and filter bookings efficiently.
+- Admin can manually track deposits and payment status.
+- Client booking history can be viewed from the admin system.
+- The dashboard provides useful operational information.
+- Version 1 public and admin workflows continue to work without regression.
 
 # Version 3 — Advanced
 
