@@ -21,11 +21,114 @@ function getStatusClasses(status: string) {
   }
 }
 
-export default async function AdminBookingsPage() {
+type AdminBookingsPageProps = {
+  searchParams: Promise<{
+    search?: string;
+    status?: string;
+    packageId?: string;
+    date?: string;
+    period?: string;
+  }>;
+};
+
+export default async function AdminBookingsPage({
+  searchParams,
+}: AdminBookingsPageProps) {
+  const {
+    search = "",
+    status = "",
+    packageId = "",
+    date = "",
+    period = "",
+  } = await searchParams;
+
+  const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = date
+      ? new Date(`${date}T00:00:00.000Z`)
+      : null;
+
+  const packages = await prisma.package.findMany({
+    orderBy: {
+      name: "asc",
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
   const bookings = await prisma.booking.findMany({
+    where: {
+      ...(search
+        ? {
+            OR: [
+              {
+                clientName: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+              {
+                phone: {
+                  contains: search,
+                },
+              },
+              {
+                email: {
+                  contains: search,
+                  mode: "insensitive",
+                },
+              },
+            ],
+          }
+        : {}),
+
+      ...(status &&
+      ["NEW", "CONFIRMED", "COMPLETED", "CANCELLED"].includes(status)
+        ? {
+            status: status as
+              | "NEW"
+              | "CONFIRMED"
+              | "COMPLETED"
+              | "CANCELLED",
+          }
+        : {}),
+
+      ...(packageId
+        ? {
+            packageId,
+          }
+        : {}),
+
+      ...(selectedDate
+        ? {
+            bookingDate: selectedDate,
+          }
+        : {}),
+
+      ...(period === "upcoming"
+        ? {
+            bookingDate: {
+              gte: today,
+            },
+          }
+        : {}),
+
+      ...(period === "past"
+        ? {
+            bookingDate: {
+              lt: today,
+            },
+          }
+        : {}),
+    },
+
     include: {
       package: true,
     },
+
     orderBy: {
       createdAt: "desc",
     },
@@ -46,6 +149,130 @@ export default async function AdminBookingsPage() {
           Review and manage photography booking requests from clients.
         </p>
       </header>
+
+      <form
+        method="GET"
+        className="grid gap-4 border border-[#d8d2ca] bg-[#fcfaf7] p-5 md:grid-cols-2 xl:grid-cols-[1.2fr_180px_220px_180px_180px_auto]"
+      >
+        <div>
+          <label
+            htmlFor="search"
+            className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+          >
+            Search
+          </label>
+
+          <input
+            id="search"
+            name="search"
+            type="search"
+            defaultValue={search}
+            placeholder="Name, phone, or email"
+            className="mt-2 w-full border border-[#d8d2ca] bg-white px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866]"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="status"
+            className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+          >
+            Status
+          </label>
+
+          <select
+            id="status"
+            name="status"
+            defaultValue={status}
+            className="mt-2 w-full border border-[#d8d2ca] bg-white px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866]"
+          >
+            <option value="">All statuses</option>
+            <option value="NEW">New</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="packageId"
+            className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+          >
+            Package
+          </label>
+
+          <select
+            id="packageId"
+            name="packageId"
+            defaultValue={packageId}
+            className="mt-2 w-full border border-[#d8d2ca] bg-white px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866]"
+          >
+            <option value="">All packages</option>
+
+            {packages.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="date"
+            className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+          >
+            Date
+          </label>
+
+          <input
+            id="date"
+            name="date"
+            type="date"
+            defaultValue={date}
+            className="mt-2 w-full border border-[#d8d2ca] bg-white px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866]"
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="period"
+            className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]"
+          >
+            Period
+          </label>
+
+          <select
+            id="period"
+            name="period"
+            defaultValue={period}
+            className="mt-2 w-full border border-[#d8d2ca] bg-white px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866]"
+          >
+            <option value="">All periods</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="past">Past</option>
+          </select>
+        </div>
+
+        <div className="flex items-end gap-3">
+          <button
+            type="submit"
+            className="cursor-pointer bg-[#171717] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
+          >
+            Apply
+          </button>
+
+          {(search || status || packageId || date || period) && (
+            <Link
+              href="/admin/bookings"
+              className="px-2 py-2.5 text-sm font-medium text-[#6d6963] transition-colors hover:text-[#171717]"
+            >
+              Reset
+            </Link>
+          )}
+        </div>
+      </form>
 
       {bookings.length === 0 ? (
         <div className="border border-[#d8d2ca] bg-[#fcfaf7] px-6 py-14">

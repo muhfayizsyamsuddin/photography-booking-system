@@ -343,7 +343,7 @@ Version 2 focuses on scheduling, booking operations, payment tracking, and clien
 Status:
 
 ```text
-PLANNED
+COMPLETED
 ```
 Tasks:
 
@@ -364,7 +364,7 @@ Booking schedules can be managed without manually checking for conflicts.
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 
