@@ -38,6 +38,9 @@ const navItems = [
     href: "/admin/portfolio",
     label: "Portfolio",
   },
+  { href: "/admin/testimonials", 
+    label: "Testimonials" 
+  }
 ];
 
 export function AdminSidebar({

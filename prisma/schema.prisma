@@ -208,3 +208,19 @@ model Client {
   @@index([name])
   @@index([email])
 }
+
+model Testimonial {
+  id            String  @id @default(cuid())
+  clientName    String
+  clientContext String?
+  quote         String
+
+  isPublished  Boolean @default(true)
+  displayOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isPublished])
+  @@index([displayOrder])
+}

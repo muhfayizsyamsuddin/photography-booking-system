@@ -31,7 +31,7 @@ function getImagePosition(position: string) {
 }
 
 export default async function HomePage() {
-  const [packages, portfolios] = await Promise.all([
+  const [packages, portfolios, testimonials] = await Promise.all([
     prisma.package.findMany({
       where: { isActive: true },
       orderBy: { displayOrder: "asc" },
@@ -45,6 +45,21 @@ export default async function HomePage() {
       include: {
         category: true,
       },
+    }),
+
+    prisma.testimonial.findMany({
+      where: {
+        isPublished: true,
+      },
+      orderBy: [
+        {
+          displayOrder: "asc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+      take: 6,
     }),
   ]);
 
@@ -289,6 +304,57 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {testimonials.length > 0 && (
+        <section className="border-t border-[#d8d2ca] bg-[#fcfaf7]">
+          <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+            <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.28em] text-[#8b7866]">
+                  Kind Words
+                </p>
+
+                <h2 className="mt-5 max-w-sm font-serif text-5xl leading-[0.95] tracking-[-0.03em] text-[#171717]">
+                  What clients remember.
+                </h2>
+
+                <p className="mt-6 max-w-sm text-[15px] leading-7 text-[#6d6963]">
+                  A few words from clients after their photography sessions.
+                </p>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                {testimonials.map((testimonial, index) => (
+                  <article
+                    key={testimonial.id}
+                    className="border-t border-[#d8d2ca] pt-6"
+                  >
+                    <p className="text-xs uppercase tracking-[0.18em] text-[#8b7866]">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+
+                    <blockquote className="mt-5 font-serif text-2xl leading-relaxed text-[#171717]">
+                      “{testimonial.quote}”
+                    </blockquote>
+
+                    <div className="mt-6">
+                      <p className="text-sm font-medium text-[#171717]">
+                        {testimonial.clientName}
+                      </p>
+
+                      {testimonial.clientContext && (
+                        <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[#8b7866]">
+                          {testimonial.clientContext}
+                        </p>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="border-t border-[#d8d2ca] bg-[#fcfaf7]">
         <div className="mx-auto max-w-7xl px-6 py-24 text-center lg:px-10 lg:py-32">

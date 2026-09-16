@@ -484,7 +484,7 @@ Visitors can browse photography work by category.
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 
