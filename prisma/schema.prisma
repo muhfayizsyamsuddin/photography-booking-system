@@ -60,6 +60,7 @@ model Package {
   displayOrder     Int     @default(0)
 
   bookings Booking[]
+  addons   PackageAddon[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,17 +97,19 @@ model Booking {
   notes       String?
   status      BookingStatus @default(NEW)
 
-  depositAmount     Int           @default(0)
-  totalPayment      Int           @default(0)
-  paymentStatus     PaymentStatus @default(UNPAID)
-  paymentProofUrl   String?
-  paymentProofId    String?
+  depositAmount   Int           @default(0)
+  totalPayment    Int           @default(0)
+  paymentStatus   PaymentStatus @default(UNPAID)
+  paymentProofUrl String?
+  paymentProofId  String?
 
   packageId String
   package   Package @relation(fields: [packageId], references: [id])
 
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id])
+
+  addons BookingAddon[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -116,6 +119,44 @@ model Booking {
   @@index([bookingDate])
   @@index([packageId])
   @@index([clientId])
+}
+
+model PackageAddon {
+  id           String  @id @default(cuid())
+  name         String
+  description  String?
+  price        Int
+  isActive     Boolean @default(true)
+  displayOrder Int     @default(0)
+
+  packageId String
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  bookingAddons BookingAddon[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([packageId])
+  @@index([isActive])
+}
+
+model BookingAddon {
+  id String @id @default(cuid())
+
+  addonName String
+  price     Int
+
+  addonId String?
+  addon   PackageAddon? @relation(fields: [addonId], references: [id], onDelete: SetNull)
+
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([bookingId])
+  @@index([addonId])
 }
 
 model AvailabilityBlock {
@@ -132,11 +173,11 @@ model AvailabilityBlock {
 }
 
 model Client {
-  id       String  @id @default(cuid())
-  name     String
-  phone    String
-  email    String?
-  notes    String?
+  id    String  @id @default(cuid())
+  name  String
+  phone String
+  email String?
+  notes String?
 
   bookings Booking[]
 

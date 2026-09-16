@@ -4,10 +4,18 @@ import { FormEvent, useState } from "react";
 import { appToast } from "@/lib/toast";
 import { ChevronDown } from "lucide-react";
 
+type PackageAddon = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+};
+
 type Package = {
   id: string;
   name: string;
   price: number;
+  addons: PackageAddon[];
 };
 
 type AvailabilityBlock = {
@@ -38,7 +46,30 @@ export default function BookingForm({
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [isTimeOpen, setIsTimeOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState(
+    selectedPackageId ?? ""
+  );
+  const [selectedAddonIds, setSelectedAddonIds] = useState<string[]>([]);
+
   const today = new Date().toLocaleDateString("en-CA");
+
+  const currentPackage = packages.find(
+    (item) => item.id === selectedPackage
+  );
+
+  const availableAddons = currentPackage?.addons ?? [];
+
+  const selectedAddons = availableAddons.filter((addon) =>
+    selectedAddonIds.includes(addon.id)
+  );
+
+  const addonsTotal = selectedAddons.reduce(
+    (total, addon) => total + addon.price,
+    0
+  );
+
+  const estimatedTotal =
+    (currentPackage?.price ?? 0) + addonsTotal;
 
   const timeSlots = [
     "08:00",
@@ -85,6 +116,14 @@ export default function BookingForm({
     return !blockedByAvailability && !blockedByConfirmedBooking;
   });
 
+  function handleAddonToggle(addonId: string) {
+    setSelectedAddonIds((current) =>
+      current.includes(addonId)
+        ? current.filter((id) => id !== addonId)
+        : [...current, addonId]
+    );
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -98,6 +137,7 @@ export default function BookingForm({
       phone: formData.get("phone"),
       email: formData.get("email"),
       packageId: formData.get("packageId"),
+      addonIds: selectedAddonIds,
       bookingDate: formData.get("bookingDate"),
       bookingTime: formData.get("bookingTime"),
       location: formData.get("location"),
@@ -205,7 +245,11 @@ export default function BookingForm({
             id="packageId"
             name="packageId"
             required
-            defaultValue={selectedPackageId ?? ""}
+            value={selectedPackage}
+            onChange={(event) => {
+              setSelectedPackage(event.target.value);
+              setSelectedAddonIds([]);
+            }}
             disabled={isLoading}
             className="w-full border-0 border-b border-[#bfb7ae] bg-transparent px-0 py-3 text-base text-[#171717] outline-none focus:border-[#171717]"
           >
@@ -220,6 +264,79 @@ export default function BookingForm({
             ))}
           </select>
         </div>
+
+        {selectedPackage && availableAddons.length > 0 && (
+          <div className="md:col-span-2">
+            <div className="border-t border-[#d8d2ca] pt-6">
+              <p className="text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+                Optional Add-ons
+              </p>
+
+              <div className="mt-4 space-y-3">
+                {availableAddons.map((addon) => {
+                  const isSelected = selectedAddonIds.includes(addon.id);
+
+                  return (
+                    <label
+                      key={addon.id}
+                      className={`flex cursor-pointer items-start justify-between gap-4 border px-4 py-4 transition-colors ${
+                        isSelected
+                          ? "border-[#171717] bg-[#fcfaf7]"
+                          : "border-[#d8d2ca] bg-transparent hover:border-[#8b7866]"
+                      }`}
+                    >
+                      <div className="flex min-w-0 gap-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => handleAddonToggle(addon.id)}
+                          disabled={isLoading}
+                          className="mt-1 h-4 w-4 cursor-pointer accent-[#171717]"
+                        />
+
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-[#171717]">
+                            {addon.name}
+                          </p>
+
+                          {addon.description && (
+                            <p className="mt-1 text-sm leading-6 text-[#6d6963]">
+                              {addon.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <p className="shrink-0 text-sm font-medium text-[#171717]">
+                        +Rp {addon.price.toLocaleString("id-ID")}
+                      </p>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentPackage && (
+          <div className="md:col-span-2">
+            <div className="flex items-center justify-between border-y border-[#d8d2ca] py-5">
+              <div>
+                <p className="text-xs uppercase tracking-[0.16em] text-[#8b7866]">
+                  Estimated Total
+                </p>
+
+                <p className="mt-1 text-sm text-[#6d6963]">
+                  Package + selected add-ons
+                </p>
+              </div>
+
+              <p className="text-xl font-semibold text-[#171717]">
+                Rp {estimatedTotal.toLocaleString("id-ID")}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div>
           <label

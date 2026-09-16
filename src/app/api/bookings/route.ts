@@ -34,6 +34,15 @@ const bookingSchema = z.object({
 
   packageId: z.string().min(1),
 
+  addonIds: z
+    .array(z.string().min(1))
+    .max(20)
+    .refine(
+      (ids) => new Set(ids).size === ids.length,
+      "Duplicate add-ons are not allowed"
+    )
+    .default([]),
+
   bookingDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid booking date"),
@@ -95,6 +104,16 @@ export async function POST(request: Request) {
         id: data.packageId,
         isActive: true,
       },
+      include: {
+        addons: {
+          where: {
+            id: {
+              in: data.addonIds,
+            },
+            isActive: true,
+          },
+        },
+      },
     });
 
     if (!photographyPackage) {
@@ -105,6 +124,19 @@ export async function POST(request: Request) {
         },
         {
           status: 404,
+        }
+      );
+    }
+
+    if (photographyPackage.addons.length !== data.addonIds.length) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "One or more selected add-ons are invalid or unavailable.",
+        },
+        {
+          status: 400,
         }
       );
     }
@@ -196,6 +228,17 @@ export async function POST(request: Request) {
         location: data.location,
         notes: data.notes || null,
         clientId: client.id,
+
+        addons: {
+          create: photographyPackage.addons.map((addon) => ({
+            addonId: addon.id,
+            addonName: addon.name,
+            price: addon.price,
+          })),
+        },
+      },
+      include: {
+        addons: true,
       },
     });
 

@@ -31,6 +31,25 @@ export default async function BookingPage({
       id: true,
       name: true,
       price: true,
+      addons: {
+        where: {
+          isActive: true,
+        },
+        orderBy: [
+          {
+            displayOrder: "asc",
+          },
+          {
+            createdAt: "asc",
+          },
+        ],
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+        },
+      },
     },
   });
 

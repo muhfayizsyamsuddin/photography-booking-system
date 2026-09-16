@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import EditPackageForm from "./edit-package-form";
+import PackageAddons from "./package-addons";
 
 type EditPackagePageProps = {
   params: Promise<{
@@ -18,6 +19,18 @@ export default async function EditPackagePage({
   const packageData = await prisma.package.findUnique({
     where: {
       id,
+    },
+    include: {
+      addons: {
+        orderBy: [
+          {
+            displayOrder: "asc",
+          },
+          {
+            createdAt: "asc",
+          },
+        ],
+      },
     },
   });
 
@@ -65,6 +78,27 @@ export default async function EditPackagePage({
         <div className="p-5 sm:p-6">
           <EditPackageForm packageData={packageData} />
         </div>
+      </section>
+
+      <section className="max-w-3xl">
+        <div className="mb-5">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#8b7866]">
+            Optional Services
+          </p>
+
+          <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#171717]">
+            Package Add-ons
+          </h2>
+
+          <p className="mt-2 text-sm leading-6 text-[#6d6963]">
+            Manage optional services and additional pricing for this package.
+          </p>
+        </div>
+
+        <PackageAddons
+          packageId={packageData.id}
+          initialAddons={packageData.addons}
+        />
       </section>
     </div>
   );

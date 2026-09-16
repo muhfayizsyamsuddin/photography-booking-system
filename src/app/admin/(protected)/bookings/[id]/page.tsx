@@ -41,6 +41,11 @@ export default async function BookingDetailPage({
     },
     include: {
       package: true,
+      addons: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
     },
   });
 
@@ -215,6 +220,53 @@ export default async function BookingDetailPage({
                 </dd>
               </div>
             </dl>
+          </section>
+
+          <section className="border border-[#d8d2ca] bg-[#fcfaf7]">
+            <div className="border-b border-[#d8d2ca] px-5 py-4 sm:px-6">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">
+                Services
+              </p>
+
+              <h2 className="mt-2 font-semibold text-[#171717]">
+                Selected Add-ons
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-[#6d6963]">
+                Optional services selected for this booking.
+              </p>
+            </div>
+
+            {booking.addons.length === 0 ? (
+              <div className="px-5 py-8 sm:px-6">
+                <p className="text-sm text-[#6d6963]">
+                  No add-ons selected.
+                </p>
+              </div>
+            ) : (
+              <div className="divide-y divide-[#e7e1da]">
+                {booking.addons.map((addon) => (
+                  <div
+                    key={addon.id}
+                    className="flex items-center justify-between gap-4 px-5 py-4 sm:px-6"
+                  >
+                    <div>
+                      <p className="text-sm font-medium text-[#171717]">
+                        {addon.addonName}
+                      </p>
+
+                      <p className="mt-1 text-xs text-[#6d6963]">
+                        Booking snapshot
+                      </p>
+                    </div>
+
+                    <p className="shrink-0 text-sm font-medium text-[#171717]">
+                      Rp {addon.price.toLocaleString("id-ID")}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           <section className="border border-[#d8d2ca] bg-[#fcfaf7]">
