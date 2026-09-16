@@ -432,7 +432,7 @@ Admin can manage repeat clients and view their booking history.
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 
