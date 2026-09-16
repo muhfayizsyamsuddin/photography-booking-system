@@ -12,7 +12,7 @@ const portfolioSchema = z.object({
   imageUrl: z.string().url(),
   imagePublicId: z.string().min(1),
   location: z.string().optional(),
-  photographyType: z.string().optional(),
+  categoryId: z.string().min(1).nullable().optional(),
 
   imageOrientation: z.enum([
     "PORTRAIT",
@@ -81,6 +81,30 @@ export async function POST(request: Request) {
       );
     }
 
+    if (result.data.categoryId) {
+      const category = await prisma.portfolioCategory.findFirst({
+        where: {
+          id: result.data.categoryId,
+          isActive: true,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!category) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Selected portfolio category is invalid or inactive.",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+    }
+
     const portfolio = await prisma.portfolio.create({
       data: {
         title: result.data.title,
@@ -89,8 +113,7 @@ export async function POST(request: Request) {
         imageUrl: result.data.imageUrl,
         imagePublicId: result.data.imagePublicId,
         location: result.data.location || null,
-        photographyType: result.data.photographyType || null,
-
+        categoryId: result.data.categoryId || null,
         imageOrientation: result.data.imageOrientation,
         imagePosition: result.data.imagePosition,
 

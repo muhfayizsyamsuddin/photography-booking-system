@@ -12,7 +12,18 @@ const inputClassName =
 const labelClassName =
   "text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]";
 
-export default function PortfolioForm() {
+type Category = {
+  id: string;
+  name: string;
+};
+
+type PortfolioFormProps = {
+  categories: Category[];
+};
+
+export default function PortfolioForm({
+  categories,
+}: PortfolioFormProps) {
   const router = useRouter();
 
   const [imageUrl, setImageUrl] = useState("");
@@ -40,8 +51,7 @@ export default function PortfolioForm() {
       imageUrl,
       imagePublicId,
       location: formData.get("location"),
-      photographyType: formData.get("photographyType"),
-
+      categoryId: formData.get("categoryId") || null,
       imageOrientation: formData.get("imageOrientation"),
       imagePosition: formData.get("imagePosition"),
 
@@ -173,17 +183,25 @@ export default function PortfolioForm() {
         </div>
 
         <div>
-          <label htmlFor="photographyType" className={labelClassName}>
-            Photography Type
+          <label htmlFor="categoryId" className={labelClassName}>
+            Category
           </label>
 
-          <input
-            id="photographyType"
-            name="photographyType"
-            placeholder="Graduation, Wedding, Couples..."
+          <select
+            id="categoryId"
+            name="categoryId"
+            defaultValue=""
             disabled={isLoading}
             className={inputClassName}
-          />
+          >
+            <option value="">No category</option>
+
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 

@@ -15,8 +15,7 @@ type PortfolioData = {
   imageUrl: string;
   imagePublicId: string | null;
   location: string | null;
-  photographyType: string | null;
-
+  categoryId: string | null;
   imageOrientation: "PORTRAIT" | "LANDSCAPE" | "SQUARE";
   imagePosition: "TOP" | "CENTER" | "BOTTOM";
 
@@ -24,8 +23,14 @@ type PortfolioData = {
   displayOrder: number;
 };
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 type EditPortfolioFormProps = {
   portfolio: PortfolioData;
+  categories: Category[];
 };
 
 const inputClassName =
@@ -36,6 +41,7 @@ const labelClassName =
 
 export default function EditPortfolioForm({
   portfolio,
+  categories,
 }: EditPortfolioFormProps) {
   const router = useRouter();
 
@@ -91,8 +97,7 @@ export default function EditPortfolioForm({
       imageUrl,
       imagePublicId,
       location: formData.get("location"),
-      photographyType: formData.get("photographyType"),
-
+      categoryId: formData.get("categoryId") || null,
       imageOrientation: formData.get("imageOrientation"),
       imagePosition: formData.get("imagePosition"),
 
@@ -270,20 +275,25 @@ export default function EditPortfolioForm({
           </div>
 
           <div>
-            <label
-              htmlFor="photographyType"
-              className={labelClassName}
-            >
-              Photography Type
+            <label htmlFor="categoryId" className={labelClassName}>
+              Category
             </label>
 
-            <input
-              id="photographyType"
-              name="photographyType"
-              defaultValue={portfolio.photographyType ?? ""}
+            <select
+              id="categoryId"
+              name="categoryId"
+              defaultValue={portfolio.categoryId ?? ""}
               disabled={isLoading || isDeleting}
               className={inputClassName}
-            />
+            >
+              <option value="">No category</option>
+
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

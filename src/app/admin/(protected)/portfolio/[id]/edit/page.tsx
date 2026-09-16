@@ -15,11 +15,31 @@ export default async function EditPortfolioPage({
 }: EditPortfolioPageProps) {
   const { id } = await params;
 
-  const portfolio = await prisma.portfolio.findUnique({
-    where: {
-      id,
-    },
-  });
+  const [portfolio, categories] = await Promise.all([
+    prisma.portfolio.findUnique({
+      where: {
+        id,
+      },
+    }),
+
+    prisma.portfolioCategory.findMany({
+      where: {
+        isActive: true,
+      },
+      orderBy: [
+        {
+          displayOrder: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
+      select: {
+        id: true,
+        name: true,
+      },
+    }),
+  ]);
 
   if (!portfolio) {
     notFound();
@@ -64,7 +84,10 @@ export default async function EditPortfolioPage({
         </div>
 
         <div className="p-5 sm:p-6">
-          <EditPortfolioForm portfolio={portfolio} />
+          <EditPortfolioForm
+            portfolio={portfolio}
+            categories={categories}
+          />
         </div>
       </section>
     </div>

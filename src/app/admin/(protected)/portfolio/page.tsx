@@ -12,6 +12,9 @@ export default async function AdminPortfolioPage() {
         createdAt: "desc",
       },
     ],
+    include: {
+      category: true,
+    },
   });
 
   return (
@@ -32,12 +35,21 @@ export default async function AdminPortfolioPage() {
           </p>
         </div>
 
-        <Link
-          href="/admin/portfolio/new"
-          className="self-start bg-[#171717] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 sm:self-auto"
-        >
-          Add Portfolio
-        </Link>
+        <div className="flex flex-wrap gap-3 sm:justify-end">
+          <Link
+            href="/admin/portfolio/categories"
+            className="border border-[#8b7866] bg-[#fcfaf7] px-4 py-2.5 text-sm font-medium text-[#171717] transition-colors hover:bg-[#f0ece6]"
+          >
+            Manage Categories
+          </Link>
+
+          <Link
+            href="/admin/portfolio/new"
+            className="bg-[#171717] px-4 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
+          >
+            Add Portfolio
+          </Link>
+        </div>
       </header>
 
       {portfolios.length === 0 ? (
@@ -57,7 +69,7 @@ export default async function AdminPortfolioPage() {
                   </th>
 
                   <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
-                    Type
+                    Category
                   </th>
 
                   <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-[0.14em] text-[#8b7866]">
@@ -99,7 +111,7 @@ export default async function AdminPortfolioPage() {
                     </td>
 
                     <td className="px-6 py-5 text-sm text-[#6d6963]">
-                      {item.photographyType || "—"}
+                      {item.category?.name || "—"}
                     </td>
 
                     <td className="px-6 py-5 text-sm text-[#6d6963]">
@@ -176,11 +188,11 @@ export default async function AdminPortfolioPage() {
                 <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-[#e7e1da] pt-4">
                   <div>
                     <dt className="text-[10px] uppercase tracking-[0.14em] text-[#8b7866]">
-                      Type
+                      Category
                     </dt>
 
                     <dd className="mt-1 text-sm text-[#6d6963]">
-                      {item.photographyType || "—"}
+                      {item.category?.name || "—"}
                     </dd>
                   </div>
 

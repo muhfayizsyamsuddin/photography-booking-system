@@ -451,7 +451,7 @@ The dashboard provides useful operational information for daily business activit
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 
@@ -468,7 +468,7 @@ Photography packages support more flexible service offerings.
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 

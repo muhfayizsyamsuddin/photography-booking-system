@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
@@ -37,20 +37,60 @@ function getImagePosition(position: string) {
   }
 }
 
-export default async function PortfolioPage() {
-  const portfolios = await prisma.portfolio.findMany({
-    where: {
-      isPublished: true,
-    },
-    orderBy: [
-      {
-        displayOrder: "asc",
+type PortfolioPageProps = {
+  searchParams: Promise<{
+    category?: string;
+  }>;
+};
+
+export default async function PortfolioPage({
+  searchParams,
+}: PortfolioPageProps) {
+  const { category } = await searchParams;
+
+  const [categories, portfolios] = await Promise.all([
+    prisma.portfolioCategory.findMany({
+      where: {
+        isActive: true,
       },
-      {
-        createdAt: "desc",
+      orderBy: [
+        {
+          displayOrder: "asc",
+        },
+        {
+          name: "asc",
+        },
+      ],
+      select: {
+        id: true,
+        name: true,
+        slug: true,
       },
-    ],
-  });
+    }),
+
+    prisma.portfolio.findMany({
+      where: {
+        isPublished: true,
+        ...(category && {
+          category: {
+            slug: category,
+            isActive: true,
+          },
+        }),
+      },
+      orderBy: [
+        {
+          displayOrder: "asc",
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+      include: {
+        category: true,
+      },
+    }),
+  ]);
 
   return (
     <main className="bg-[#f6f3ee]">
@@ -73,11 +113,42 @@ export default async function PortfolioPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-6 pb-14 lg:px-10 lg:pb-20">
+        <div className="flex flex-wrap gap-x-6 gap-y-3 border-y border-[#d8d2ca] py-5">
+          <Link
+            href="/portfolio"
+            className={`text-xs font-medium uppercase tracking-[0.16em] transition-colors ${
+              !category
+                ? "text-[#171717]"
+                : "text-[#8b7866] hover:text-[#171717]"
+            }`}
+          >
+            All
+          </Link>
+
+          {categories.map((item) => (
+            <Link
+              key={item.id}
+              href={`/portfolio?category=${item.slug}`}
+              className={`text-xs font-medium uppercase tracking-[0.16em] transition-colors ${
+                category === item.slug
+                  ? "text-[#171717]"
+                  : "text-[#8b7866] hover:text-[#171717]"
+              }`}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="mx-auto max-w-7xl px-6 pb-28 lg:px-10 lg:pb-36">
         {portfolios.length === 0 ? (
           <div className="border-t border-[#d8d2ca] py-16">
             <p className="text-sm text-[#6d6963]">
-              Portfolio is currently unavailable.
+              {category
+                ? "No portfolio items found in this category."
+                : "Portfolio is currently unavailable."}
             </p>
           </div>
         ) : (
@@ -126,7 +197,7 @@ export default async function PortfolioPage() {
                     <div className="border-t border-[#d8d2ca] pt-5">
                       <div className="flex items-center justify-between gap-6">
                         <p className="text-xs uppercase tracking-[0.18em] text-[#8b7866]">
-                          {item.photographyType ?? "Photography"}
+                          {item.category?.name ?? "Photography"}
                         </p>
 
                         <span className="text-xs text-[#8b7866]">

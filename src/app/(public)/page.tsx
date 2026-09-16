@@ -42,6 +42,9 @@ export default async function HomePage() {
       where: { isPublished: true },
       orderBy: { displayOrder: "asc" },
       take: 7,
+      include: {
+        category: true,
+      },
     }),
   ]);
 
@@ -185,7 +188,7 @@ export default async function HomePage() {
                     <div className="mt-5 flex items-start justify-between gap-6 border-t border-[#d8d2ca] pt-4">
                       <div>
                         <p className="text-xs uppercase tracking-[0.18em] text-[#8b7866]">
-                          {item.photographyType ?? "Photography"}
+                          {item.category?.name ?? "Photography"}
                         </p>
 
                         <h3 className="mt-2 font-serif text-2xl text-[#171717]">

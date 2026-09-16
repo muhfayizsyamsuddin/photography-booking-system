@@ -1,24 +1,24 @@
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
-import PortfolioForm from "./portfolio-form";
+import CategoryManager from "./category-manager";
 
-export default async function NewPortfolioPage() {
+export default async function PortfolioCategoriesPage() {
   const categories = await prisma.portfolioCategory.findMany({
-    where: {
-      isActive: true,
-    },
     orderBy: [
       {
         displayOrder: "asc",
       },
       {
-        name: "asc",
+        createdAt: "asc",
       },
     ],
-    select: {
-      id: true,
-      name: true,
+    include: {
+      _count: {
+        select: {
+          portfolios: true,
+        },
+      },
     },
   });
 
@@ -37,30 +37,15 @@ export default async function NewPortfolioPage() {
         </p>
 
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#171717]">
-          Add Portfolio
+          Portfolio Categories
         </h1>
 
         <p className="mt-2 max-w-xl text-sm leading-6 text-[#6d6963]">
-          Add a new photography project and control how it appears on the
-          public portfolio.
+          Organize portfolio work into categories for easier browsing and filtering.
         </p>
       </header>
 
-      <section className="max-w-3xl border border-[#d8d2ca] bg-[#fcfaf7]">
-        <div className="border-b border-[#d8d2ca] px-5 py-4 sm:px-6">
-          <h2 className="font-semibold text-[#171717]">
-            Portfolio Information
-          </h2>
-
-          <p className="mt-1 text-sm text-[#6d6963]">
-            Enter the project details, image, category, and publishing settings.
-          </p>
-        </div>
-
-        <div className="p-5 sm:p-6">
-          <PortfolioForm categories={categories} />
-        </div>
-      </section>
+      <CategoryManager initialCategories={categories} />
     </div>
   );
 }
