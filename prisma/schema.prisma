@@ -105,6 +105,9 @@ model Booking {
   packageId String
   package   Package @relation(fields: [packageId], references: [id])
 
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -112,6 +115,7 @@ model Booking {
   @@index([paymentStatus])
   @@index([bookingDate])
   @@index([packageId])
+  @@index([clientId])
 }
 
 model AvailabilityBlock {
@@ -125,4 +129,21 @@ model AvailabilityBlock {
   updatedAt DateTime @updatedAt
 
   @@index([date])
+}
+
+model Client {
+  id       String  @id @default(cuid())
+  name     String
+  phone    String
+  email    String?
+  notes    String?
+
+  bookings Booking[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([phone])
+  @@index([name])
+  @@index([email])
 }

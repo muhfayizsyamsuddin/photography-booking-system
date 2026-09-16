@@ -413,7 +413,7 @@ Version 2 does not include an automatic payment gateway or automatic payment ver
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 

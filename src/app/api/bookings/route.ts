@@ -170,6 +170,21 @@ export async function POST(request: Request) {
       );
     }
 
+    const client = await prisma.client.upsert({
+      where: {
+        phone: normalizedPhone,
+      },
+      update: {
+        name: data.clientName,
+        email: data.email || undefined,
+      },
+      create: {
+        name: data.clientName,
+        phone: normalizedPhone,
+        email: data.email || null,
+      },
+    });
+
     const booking = await prisma.booking.create({
       data: {
         clientName: data.clientName,
@@ -180,6 +195,7 @@ export async function POST(request: Request) {
         bookingTime: data.bookingTime,
         location: data.location,
         notes: data.notes || null,
+        clientId: client.id,
       },
     });
 

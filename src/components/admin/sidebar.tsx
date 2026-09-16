@@ -23,6 +23,10 @@ const navItems = [
     label: "Bookings",
   },
   {
+    href: "/admin/clients",
+    label: "Clients",
+  },
+  {
     href: "/admin/availability",
     label: "Availability",
   },
