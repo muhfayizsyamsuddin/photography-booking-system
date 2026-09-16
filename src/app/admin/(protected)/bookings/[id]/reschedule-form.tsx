@@ -91,7 +91,7 @@ export default function RescheduleForm({
 
   return (
     <form onSubmit={handleSubmit}>
-    <div className="grid gap-5 md:grid-cols-[1fr_1fr_auto] md:items-end">
+    <div className="grid gap-5">
       <div>
         <label
           htmlFor="reschedule-date"
@@ -169,7 +169,7 @@ export default function RescheduleForm({
           (bookingDate === currentDate &&
             bookingTime === currentTime)
         }
-        className="h-10.5 min-w-36 bg-[#171717] px-5 text-sm font-medium text-white transition-opacity hover:opacity-85 cursor-pointer disabled:cursor-not-allowed disabled:bg-[#d8d2ca] disabled:text-[#8b7866]"
+        className="w-full cursor-pointer bg-[#171717] px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:bg-[#d8d2ca] disabled:text-[#8b7866]"
       >
         {isLoading ? "Updating..." : "Reschedule"}
       </button>

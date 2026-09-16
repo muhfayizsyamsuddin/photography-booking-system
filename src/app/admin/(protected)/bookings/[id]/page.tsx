@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import RescheduleForm from "./reschedule-form";
 import { prisma } from "@/lib/prisma";
 import BookingStatusForm from "./status-form";
+import PaymentForm from "./payment-form";
 
 type BookingDetailPageProps = {
   params: Promise<{
@@ -215,26 +216,29 @@ export default async function BookingDetailPage({
               </div>
             </dl>
           </section>
+
           <section className="border border-[#d8d2ca] bg-[#fcfaf7]">
             <div className="border-b border-[#d8d2ca] px-5 py-4 sm:px-6">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">
-                Schedule
+                Payment
               </p>
 
               <h2 className="mt-2 font-semibold text-[#171717]">
-                Reschedule Booking
+                Payment Tracking
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-[#6d6963]">
-                Change the booking date or time.
+                Record deposit, total payment received, and payment status.
               </p>
             </div>
 
             <div className="p-5 sm:p-6">
-              <RescheduleForm
+              <PaymentForm
                 bookingId={booking.id}
-                currentDate={booking.bookingDate.toISOString().slice(0, 10)}
-                currentTime={booking.bookingTime}
+                initialDepositAmount={booking.depositAmount}
+                initialTotalPayment={booking.totalPayment}
+                initialPaymentStatus={booking.paymentStatus}
+                initialPaymentProofUrl={booking.paymentProofUrl}
               />
             </div>
           </section>
@@ -296,6 +300,29 @@ export default async function BookingDetailPage({
               <BookingStatusForm
                 bookingId={booking.id}
                 currentStatus={booking.status}
+              />
+            </div>
+          </div>
+          <div className="border border-[#d8d2ca] bg-[#fcfaf7]">
+            <div className="border-b border-[#d8d2ca] px-5 py-4">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-[#8b7866]">
+                Schedule
+              </p>
+
+              <h2 className="mt-2 font-semibold text-[#171717]">
+                Reschedule Booking
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-[#6d6963]">
+                Change the booking date or time.
+              </p>
+            </div>
+
+            <div className="p-5">
+              <RescheduleForm
+                bookingId={booking.id}
+                currentDate={booking.bookingDate.toISOString().slice(0, 10)}
+                currentTime={booking.bookingTime}
               />
             </div>
           </div>

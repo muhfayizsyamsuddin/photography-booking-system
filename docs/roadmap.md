@@ -384,7 +384,7 @@ Admin can quickly find and manage bookings as booking volume grows.
 
 Status:
 
-PLANNED
+COMPLETED
 
 Tasks:
 

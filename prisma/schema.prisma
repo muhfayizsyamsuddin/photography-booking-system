@@ -30,6 +30,12 @@ enum ImagePosition {
   BOTTOM
 }
 
+enum PaymentStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -90,6 +96,12 @@ model Booking {
   notes       String?
   status      BookingStatus @default(NEW)
 
+  depositAmount     Int           @default(0)
+  totalPayment      Int           @default(0)
+  paymentStatus     PaymentStatus @default(UNPAID)
+  paymentProofUrl   String?
+  paymentProofId    String?
+
   packageId String
   package   Package @relation(fields: [packageId], references: [id])
 
@@ -97,6 +109,7 @@ model Booking {
   updatedAt DateTime @updatedAt
 
   @@index([status])
+  @@index([paymentStatus])
   @@index([bookingDate])
   @@index([packageId])
 }

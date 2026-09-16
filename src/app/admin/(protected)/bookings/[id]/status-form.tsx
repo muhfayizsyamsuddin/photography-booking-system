@@ -79,7 +79,7 @@ export default function BookingStatusForm({
           value={status}
           onChange={(event) => setStatus(event.target.value)}
           disabled={isLoading}
-          className="mt-2 w-full border border-[#d8d2ca] bg-[#fcfaf7] px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-2 w-full cursor-pointer border border-[#d8d2ca] bg-[#fcfaf7] px-3 py-2.5 text-sm text-[#171717] outline-none transition-colors focus:border-[#8b7866] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {statuses.map((item) => (
             <option key={item} value={item}>
